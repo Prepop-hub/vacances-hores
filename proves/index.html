@@ -1,0 +1,1942 @@
+<!doctype html>
+<html lang="ca">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0e6e63">
+<title>Vacances i hores</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Vacances">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+/* Layout: one calm column, three numbered steps (what you have, log a day, your days), help folded away at the end. */
+:root {
+  --bg: #eef2f1;
+  --surface: #ffffff;
+  --surface-2: #f6f8f8;
+  --ink: #15242a;
+  --muted: #5a6a70;
+  --line: #d6dfdd;
+  --accent: #0e6e63;
+  --accent-soft: #dcefeb;
+  --accent-ink: #ffffff;
+  --bad: #b42318; --bad-bg: #fde5e2;
+  --ok: #17703a; --ok-bg: #def3e5;
+  --warn: #8a5a00; --warn-bg: #fdf0d0;
+  --vac: #2f8f4e; --vac-bg: #e1f2e6;
+  --ap: #2c63b8; --ap-bg: #e2ebf8;
+  --cf: #c25e12; --cf-bg: #fbe8d9;
+  --form: #a8327c; --form-bg: #f7e2ef;
+  --hex: #6b4fbf; --hex-bg: #ebe6f8;
+  --font: "Nunito", ui-rounded, "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f181a; --surface: #182326; --surface-2: #1f2c30; --ink: #e7efed; --muted: #9bacaa; --line: #2b3a3e;
+    --accent: #4fc0ad; --accent-soft: #173a35; --accent-ink: #0b1a1a;
+    --bad: #ff8b7b; --bad-bg: #3c1f1b; --ok: #7fd69a; --ok-bg: #173020; --warn: #f2c165; --warn-bg: #352a12;
+    --vac: #7fd69a; --vac-bg: #1a3021; --ap: #8db6f5; --ap-bg: #1a2840; --cf: #f4a76a; --cf-bg: #392616;
+    --form: #ee8fc9; --form-bg: #391c2f; --hex: #b7a3f5; --hex-bg: #292342;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f181a; --surface: #182326; --surface-2: #1f2c30; --ink: #e7efed; --muted: #9bacaa; --line: #2b3a3e;
+  --accent: #4fc0ad; --accent-soft: #173a35; --accent-ink: #0b1a1a;
+  --bad: #ff8b7b; --bad-bg: #3c1f1b; --ok: #7fd69a; --ok-bg: #173020; --warn: #f2c165; --warn-bg: #352a12;
+  --vac: #7fd69a; --vac-bg: #1a3021; --ap: #8db6f5; --ap-bg: #1a2840; --cf: #f4a76a; --cf-bg: #392616;
+  --form: #ee8fc9; --form-bg: #391c2f; --hex: #b7a3f5; --hex-bg: #292342;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.5;
+  padding-left: max(14px, env(safe-area-inset-left, 0px)); padding-right: max(14px, env(safe-area-inset-right, 0px));
+  padding-block: 18px 60px;
+}
+.wrap { max-width: 640px; margin: 0 auto; display: grid; gap: 22px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1 { font-size: 1.7rem; letter-spacing: -0.01em; }
+/* Header band */
+.hero { display: flex; align-items: center; gap: 14px; background: #0e6e63; color: #ffffff; border-radius: var(--radius); padding: 18px 20px; box-shadow: 0 8px 24px rgba(14, 110, 99, 0.25); }
+.hero-icon { width: 54px; height: 54px; flex: none; }
+.hero-text { display: grid; gap: 2px; min-width: 0; flex: 1; }
+.theme-btn { flex: none; align-self: center; display: grid; justify-items: center; gap: 0; min-width: 52px; border: 1px solid rgba(255,255,255,0.45); background: rgba(255,255,255,0.12); color: #ffffff; border-radius: 12px; padding: 6px 8px; font-size: 1.2rem; line-height: 1.1; }
+.theme-btn small { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.04em; }
+.theme-btn:hover { background: rgba(255,255,255,0.22); }
+.hero-kicker { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; opacity: 0.85; }
+.hero h1 { font-size: clamp(1.6rem, 6vw, 2.2rem); line-height: 1.05; color: #ffffff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .hero { background: #0f4f48; box-shadow: none; } }
+:root[data-theme="dark"] .hero { background: #0f4f48; box-shadow: none; }
+.lead { color: var(--muted); margin: 4px 0 0; }
+.num { font-variant-numeric: tabular-nums; }
+button, input, textarea { font: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Step blocks */
+.step { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: grid; gap: 14px; }
+.step-head { display: flex; align-items: center; gap: 12px; }
+/* Floating add button */
+.fab { position: fixed; z-index: 16; right: max(18px, calc(env(safe-area-inset-right, 0px) + 18px)); bottom: calc(86px + env(safe-area-inset-bottom, 0px)); width: 60px; height: 60px; border-radius: 50%; border: none; background: var(--accent); color: var(--accent-ink); font-size: 2rem; font-weight: 700; line-height: 1; display: grid; place-items: center; box-shadow: 0 8px 22px rgba(14, 110, 99, 0.4); }
+.fab:active { transform: scale(0.95); }
+@media (min-width: 700px) { .fab { right: calc(50% - 320px + 18px); } }
+@media (prefers-reduced-motion: no-preference) { .fab { transition: transform .12s; } }
+
+/* Line icons */
+.ic { width: 1.15em; height: 1.15em; vertical-align: -0.2em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.tab .ti .ic { width: 1.5rem; height: 1.5rem; vertical-align: 0; }
+.fab .fab-ic { width: 1.8rem; height: 1.8rem; stroke-width: 2.6; }
+.theme-btn .ic { width: 1.35rem; height: 1.35rem; vertical-align: 0; }
+summary .ic { margin-right: 2px; }
+
+/* Save animation */
+@media (prefers-reduced-motion: no-preference) {
+  .toast.pop { animation: toastPop .38s cubic-bezier(.2, 1.4, .4, 1); }
+  @keyframes toastPop { from { transform: translateX(-50%) translateY(16px) scale(.85); opacity: 0; } to { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; } }
+  .entry.just-saved, .bcard.just-saved { animation: justSaved 1.6s ease-out; }
+  @keyframes justSaved { 0% { box-shadow: 0 0 0 0 var(--accent); } 30% { box-shadow: 0 0 0 6px var(--accent-soft); } 100% { box-shadow: 0 0 0 0 transparent; } }
+}
+
+/* Tabs */
+.off-tab { display: none !important; }
+body { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important; }
+.tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 15; display: grid; grid-template-columns: repeat(4, 1fr); background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -6px 20px rgba(0,0,0,0.08); padding: 6px max(8px, env(safe-area-inset-left, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-right, 0px)); }
+.tab { border: none; background: transparent; color: var(--muted); display: grid; justify-items: center; gap: 2px; padding: 6px 2px; border-radius: 12px; font-size: 0.74rem; font-weight: 700; }
+.tab .ti { font-size: 1.35rem; line-height: 1; }
+.tab[aria-current="page"] { color: var(--accent); background: var(--accent-soft); }
+@media (min-width: 700px) { .tabbar { left: 50%; right: auto; transform: translateX(-50%); width: 640px; border: 1px solid var(--line); border-bottom: none; border-radius: 16px 16px 0 0; } }
+.step .step-no { display: none; }
+.step-no { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; font-weight: 700; flex: none; }
+.step-head h2 { font-size: 1.2rem; }
+.step-head p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+.step-head > div { min-width: 0; }
+
+.btn { border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 9px 16px; font-weight: 600; }
+.btn:hover { border-color: var(--muted); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.big { width: 100%; padding: 15px 18px; font-size: 1.05rem; border-radius: 12px; }
+.btn.primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn.danger { color: var(--bad); }
+.btn.small { padding: 6px 12px; font-size: 0.88rem; }
+.btn.link { border: none; background: none; color: var(--accent); padding: 4px 0; text-decoration: underline; }
+
+/* All-years summary */
+.summary { background: var(--surface); border: 2px solid var(--accent); border-radius: var(--radius); padding: 18px; display: grid; gap: 12px; }
+.summary h2 { font-size: 1.25rem; }
+.sum-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.sum-card { border-radius: 12px; padding: 12px 14px; background: var(--bagbg); border: 1px solid var(--bag); display: grid; gap: 6px; }
+.sum-name { font-weight: 700; display: flex; align-items: flex-start; gap: 8px; }
+.sum-name .dot { margin-top: 0.4em; }
+.sum-total { font-size: 1.6rem; font-weight: 800; line-height: 1.1; }
+.sum-total small { font-size: 0.9rem; font-weight: 600; color: var(--muted); }
+.sum-years { display: flex; flex-wrap: wrap; gap: 6px; }
+.ychip { background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; font-size: 0.86rem; font-weight: 600; }
+.ychip.neg { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+.ychip.zero { color: var(--muted); }
+.sum-card.unset { background: var(--surface-2); border-color: var(--line); }
+.sum-card.unset .sum-total { font-size: 1rem; color: var(--muted); font-weight: 600; }
+.sum-card.neg { background: var(--bad-bg); border-color: var(--bad); }
+.sum-card.neg .sum-total { color: var(--bad); }
+
+/* Year picker */
+.years { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.years .label { font-weight: 700; margin-right: 4px; }
+.year-btn { border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 12px; padding: 8px 18px; font-weight: 800; font-size: 1.05rem; }
+.year-btn[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.year-add { border: 2px dashed var(--line); background: transparent; color: var(--muted); border-radius: 12px; padding: 8px 14px; font-weight: 600; }
+
+/* Welcome */
+.welcome { background: var(--accent-soft); border: 1px solid var(--accent); border-radius: var(--radius); padding: 16px 18px; display: grid; gap: 10px; }
+.welcome b { font-size: 1.05rem; }
+
+/* Balance */
+.bal { display: grid; gap: 10px; }
+.bal-row { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px; background: var(--surface-2); }
+.bal-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.bal-name { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--bag); flex: none; }
+.bal-left { font-size: 1.35rem; font-weight: 800; }
+.bal-left small { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+.track { height: 10px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.track i { display: block; height: 100%; background: var(--bag); border-radius: 99px; }
+.bal-sub { color: var(--muted); font-size: 0.88rem; }
+.bal-row.neg { background: var(--bad-bg); border-color: var(--bad); }
+.bal-row.neg .bal-left { color: var(--bad); }
+.bal-row.neg .track i { background: var(--bad); }
+.bal-alert { color: var(--bad); font-weight: 700; font-size: 0.92rem; }
+.bal-row.unset .bal-left { color: var(--muted); font-size: 1rem; font-weight: 600; }
+
+/* Compact what's-left table */
+.qwrap { overflow-x: auto; }
+.qtable { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.qtable th, .qtable td { padding: 8px 8px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+.qtable thead th { font-size: 0.85rem; color: var(--muted); font-weight: 700; }
+.qtable thead th.sel { color: var(--accent); }
+.qtable .qname { text-align: left; font-weight: 600; white-space: normal; }
+.qtable .qname .dot { display: inline-block; margin-right: 8px; vertical-align: 0.05em; }
+.qtable td { font-weight: 700; }
+.qtable td.sel, .qtable th.sel { background: var(--accent-soft); }
+.qtable td.zero { color: var(--muted); font-weight: 500; }
+.qtable td.neg { color: var(--bad); }
+.qtable .qtot { font-weight: 800; }
+.qtable tbody tr:last-child th, .qtable tbody tr:last-child td { border-bottom: none; }
+.qempty { text-align: left !important; color: var(--muted); font-weight: 500 !important; white-space: normal !important; }
+
+/* Calendar */
+.cal-head { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 10px; }
+.cal-head h2 { text-align: center; font-size: 1.2rem; }
+.cal-head .btn { font-size: 1.2rem; width: 42px; height: 42px; padding: 0; }
+.cal-sub { display: flex; justify-content: center; align-items: baseline; gap: 10px; }
+.cal-month { font-weight: 800; font-size: 1.05rem; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; }
+.cal-dow { text-align: center; font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; padding-bottom: 2px; }
+.cal-day { position: relative; aspect-ratio: 1 / 1; min-height: 40px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); padding: 3px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.9rem; cursor: pointer; overflow: hidden; }
+.cal-day.wkend { background: var(--surface-2); color: var(--muted); }
+.cal-day.other { visibility: hidden; }
+.cal-day.today { border: 2px solid var(--accent); }
+.cal-day.has { background: var(--bagbg); border: 2px solid var(--bag); }
+.cal-day .bars { display: flex; width: 100%; height: 7px; border-radius: 99px; overflow: hidden; gap: 1px; }
+.cal-day .bars i { flex: 1; background: var(--bag); }
+.cal-day .tag { position: absolute; top: 2px; right: 2px; font-size: 0.6rem; line-height: 1; font-weight: 800; color: #fff; background: var(--bag); border-radius: 6px; padding: 2px 3px; }
+.cal-day.has .num { color: var(--ink); }
+.cal-legend { display: flex; flex-wrap: wrap; gap: 10px; font-size: 0.85rem; }
+.cal-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.entry.flash { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.spent { border: 1px solid var(--line); border-radius: 12px; padding: 0 12px; background: var(--surface-2); }
+.spent[open] { padding-bottom: 8px; }
+.spent summary { padding: 10px 0; font-weight: 700; cursor: pointer; }
+.qtable td small { font-weight: 500; color: var(--muted); font-size: 0.78rem; }
+.spent .qtable .qname { white-space: nowrap; }
+.spent .qtable th, .spent .qtable td { padding: 8px 5px; }
+
+/* Big balance cards */
+.bigcards { display: grid; grid-template-columns: repeat(auto-fill, minmax(136px, 1fr)); gap: 10px; }
+.bcard-name { overflow-wrap: anywhere; }
+.bcard { border-radius: 14px; padding: 12px 14px; background: var(--bagbg); border: 1px solid var(--bag); display: grid; gap: 6px; align-content: start; }
+.bcard-name { font-weight: 700; font-size: 0.92rem; display: flex; align-items: center; gap: 6px; }
+.bcard-big { font-size: 2.1rem; font-weight: 800; line-height: 1; letter-spacing: -0.02em; }
+.bcard-big small { display: block; font-size: 0.82rem; font-weight: 600; color: var(--muted); letter-spacing: 0; margin-top: 2px; }
+.bcard .track { height: 8px; background: var(--surface); }
+.bcard-sub { font-size: 0.8rem; color: var(--muted); }
+.bcard-years { display: grid; gap: 4px; margin-top: 2px; }
+.byr { display: flex; align-items: center; gap: 5px; font-size: 0.82rem; background: var(--surface); border-radius: 8px; padding: 3px 5px; }
+.byr-y { background: var(--bag); color: #fff; font-weight: 800; font-size: 0.7rem; border-radius: 6px; padding: 1px 5px; flex: none; }
+.byr-val { color: var(--muted); min-width: 0; white-space: nowrap; }
+.bcard { min-width: 0; }
+.byr-val b { color: var(--ink); font-size: 0.95rem; }
+.byr.zero .byr-val b { color: var(--muted); }
+.byr.neg .byr-val b { color: var(--bad); }
+.bcard.neg { background: var(--bad-bg); border-color: var(--bad); }
+.bcard.neg .bcard-big { color: var(--bad); }
+.bcard.neg .track i { background: var(--bad); }
+.bcard.zero .bcard-big { color: var(--muted); }
+.bigcards .empty { grid-column: 1 / -1; }
+
+/* Compact picked balances */
+.pick-row { border: 1px solid var(--bag); background: var(--bagbg); border-radius: 12px; padding: 8px 10px; display: grid; gap: 8px; }
+.pick-line { display: flex; align-items: center; gap: 8px; }
+.pick-info { flex: 1; min-width: 0; }
+.pick-val { font-weight: 800; font-size: 1.1rem; white-space: nowrap; }
+.pick-row .rm { width: 32px; height: 32px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--muted); }
+
+#haveForm { border-top: none; padding: 14px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; }
+#haveBtn .ic { width: 1.3em; height: 1.3em; }
+#haveForm .years { padding-bottom: 6px; border-bottom: 1px dashed var(--line); }
+#haveForm .years .year-btn { padding: 6px 14px; font-size: 1rem; }
+#haveForm .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Holidays */
+.cal-day.hol .num { color: var(--bad); }
+.cal-day.hol::after { content: ""; position: absolute; left: 4px; top: 4px; width: 6px; height: 6px; border-radius: 50%; background: var(--bad); }
+.cal-day.hol:not(.has) { background: var(--bad-bg); }
+.hol-key { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--bad); }
+.cal-hols { display: grid; gap: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 0.9rem; }
+.hol-row { display: flex; gap: 10px; }
+.hol-d { color: var(--bad); font-weight: 800; min-width: 52px; }
+.hol-warn { color: var(--bad); font-weight: 700; font-size: 0.9rem; }
+
+/* Phones: Apuntar and Calendari fit one screen */
+@media (max-width: 520px) {
+  body { padding-block: 10px calc(88px + env(safe-area-inset-bottom, 0px)) !important; }
+  .wrap { gap: 12px; }
+  body:not([data-tab="inici"]) .hero { padding: 8px 12px; gap: 10px; box-shadow: none; }
+  body:not([data-tab="inici"]) .hero-icon { width: 32px; height: 32px; }
+  body:not([data-tab="inici"]) .hero h1 { font-size: 1.2rem; }
+  body:not([data-tab="inici"]) .hero-kicker { font-size: 0.62rem; }
+  body:not([data-tab="inici"]) .theme-btn { padding: 3px 6px; min-width: 44px; }
+  body:not([data-tab="inici"]) .theme-btn small { display: none; }
+  body:not([data-tab="inici"]) .step { padding: 12px; gap: 10px; }
+
+  /* Apuntar */
+  #formSec .step-head { display: none; }
+  #entryForm { gap: 10px !important; }
+  #entryForm .field { gap: 4px; }
+  #entryForm .field > p.hint { display: none; }
+  #entryForm .q { font-size: 0.92rem; }
+  #fDate { padding: 8px 10px; }
+  .choices { gap: 6px; }
+  .choice { padding: 6px 4px; border-radius: 10px; }
+  .choice b { font-size: 0.9rem; }
+  .choice small { font-size: 0.72rem; }
+  .torn { margin-top: 2px; gap: 4px; }
+  .torn .hint { display: none; }
+  .ycards { gap: 6px; }
+  .ycard { padding: 6px 8px; gap: 5px; }
+  .ycard-h span { font-size: 0.95rem; }
+  .tiles { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+  .tile { padding: 5px 7px; border-width: 1.5px; }
+  .tile b { font-size: 0.85rem; }
+  .tile span { font-size: 0.74rem; }
+  .picked { gap: 6px; }
+  .pick-row { padding: 5px 8px; gap: 6px; }
+  .pick-row .src-left { display: none; }
+  .pick-val { font-size: 1rem; }
+  .cover { padding: 8px 10px; gap: 6px; font-size: 0.9rem; }
+  .cover .bar { height: 8px; }
+  .cover .chip { font-size: 0.78rem; padding: 2px 8px; }
+  .from { gap: 4px; }
+  .btn.big { padding: 11px 16px; font-size: 1rem; }
+
+  /* Calendari */
+  .cal-head .btn { width: 36px; height: 36px; }
+  .cal-head h2 { font-size: 1.05rem; }
+  .cal-grid { gap: 3px; }
+  .cal-day { aspect-ratio: auto; height: 40px; min-height: 0; border-radius: 8px; padding: 2px; font-size: 0.85rem; }
+  .cal-legend { gap: 4px 8px; font-size: 0.72rem; }
+  section.cal > p.hint { display: none; }
+  .cal-hols { padding: 6px 10px; font-size: 0.8rem; gap: 2px; }
+}
+
+.tile b { flex-wrap: wrap; }
+.tile span strong { font-weight: 800; color: var(--ink); }
+.tile-y { font-style: normal; font-size: 0.7rem; font-weight: 800; color: #fff; background: var(--bag); border-radius: 5px; padding: 0 5px; margin-left: auto; }
+.tile[aria-pressed="true"] b::after { margin-left: 4px; }
+.date-row { grid-template-columns: auto 1fr; align-items: center; column-gap: 10px; }
+@media (max-width: 520px) {
+  .cover .from { display: none; }
+  #src .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+  #src .tile { padding: 6px 9px; gap: 2px; }
+  #src .tile b { font-size: 1rem; gap: 5px; flex-wrap: nowrap; }
+  #src .tile .tile-y { font-size: 0.78rem; padding: 1px 6px; }
+  #src .tile span { font-size: 0.82rem; }
+  #src .tile span strong { font-size: 1.1rem; color: var(--ink); }
+  #picked .pick-row { padding: 3px 8px; }
+  #picked .pick-row .btn.small { padding: 4px 10px; }
+  #picked .rm { width: 28px; height: 28px; }
+  .cover { padding: 6px 10px; gap: 4px; }
+  body:not([data-tab="inici"]) .hero { padding: 6px 12px; }
+  #entryForm { gap: 8px !important; }
+}
+
+/* Coloured balance tiles */
+#src .tile { background: var(--bagbg); border-color: var(--bag); border-width: 1.5px; }
+#src .tile[aria-pressed="true"] { background: var(--bagbg); border-width: 3px; box-shadow: 0 0 0 2px var(--bagbg), 0 0 0 3px var(--bag); }
+#src .tile.neg { background: var(--bad-bg); border-color: var(--bad); }
+
+/* Top-right menu */
+#menuBtn .ic { width: 1.35rem; height: 1.35rem; vertical-align: 0; }
+header { position: relative; }
+.menu-panel { position: absolute; z-index: 30; right: 0; top: calc(100% + 8px); width: min(420px, 100%); max-height: calc(100vh - 170px); overflow: auto; background: var(--surface); color: var(--ink); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 16px 40px rgba(0,0,0,0.22); padding: 10px 12px 14px; display: grid; gap: 8px; }
+.menu-head { display: flex; justify-content: space-between; align-items: center; padding: 2px 2px 4px; }
+.menu-panel details { border-radius: 12px; }
+@media (max-width: 520px) {
+  .menu-panel { width: 100%; }
+  .hero { gap: 10px; padding: 14px 14px; }
+  .hero-icon { width: 44px; height: 44px; }
+  .hero h1 { font-size: 1.45rem; white-space: nowrap; }
+  .hero-kicker { white-space: nowrap; }
+  .theme-btn { min-width: 40px; padding: 6px; }
+  .theme-btn small { display: none; }
+}
+
+/* Per-year detail */
+.ydetail { display: grid; gap: 10px; padding-bottom: 4px; }
+.yblock { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.yblock-h { background: var(--accent); color: var(--accent-ink); font-weight: 800; padding: 6px 12px; font-size: 1rem; }
+.ytable { width: 100%; border-collapse: collapse; font-size: 0.9rem; table-layout: fixed; }
+.ytable th.yname { width: 38%; }
+.ytable td.yleft small { font-size: 0.72rem; font-weight: 600; color: var(--muted); }
+.ytable th, .ytable td { padding: 8px 6px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ytable thead th { font-size: 0.68rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; padding-top: 6px; padding-bottom: 6px; }
+.ytable .yname { text-align: left; font-weight: 700; }
+.ytable .yname .dot { display: inline-block; margin-right: 6px; vertical-align: 0.05em; }
+.ytable td.yleft { font-weight: 800; font-size: 1.05rem; }
+.ytable td.zero { color: var(--muted); }
+.ytable td.neg { color: var(--bad); }
+.ytable tbody tr:last-child th, .ytable tbody tr:last-child td { border-bottom: none; }
+#detailBox > summary::after { content: " · tenies, gastat i queda"; font-weight: 500; color: var(--muted); font-size: 0.85rem; }
+
+/* New version notice */
+.update-bar { position: fixed; z-index: 40; left: 50%; transform: translateX(-50%); top: calc(10px + env(safe-area-inset-top, 0px)); display: flex; align-items: center; gap: 12px; background: var(--ink); color: var(--bg); padding: 8px 10px 8px 16px; border-radius: 999px; box-shadow: 0 8px 24px rgba(0,0,0,.3); font-weight: 700; max-width: calc(100% - 24px); }
+.update-bar .btn { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.update-bar { width: max-content; }
+.update-bar span { white-space: nowrap; }
+
+/* Els meus dies: date cards */
+.list .dsec { list-style: none; font-weight: 800; font-size: 0.95rem; color: var(--accent); padding: 6px 2px 0; }
+.list .dsec.past { color: var(--muted); }
+.dcard { display: grid !important; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px !important; }
+.dbox { display: grid; justify-items: center; background: var(--surface); border: 2px solid var(--accent); border-radius: 12px; overflow: hidden; text-align: center; }
+.dbox-m { width: 100%; background: var(--accent); color: var(--accent-ink); font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 0; }
+.dbox-d { font-size: 1.6rem; font-weight: 800; line-height: 1.1; padding-top: 2px; }
+.dbox-y { font-size: 0.7rem; color: var(--muted); padding-bottom: 3px; }
+.entry.short .dbox { border-color: var(--bad); }
+.entry.short .dbox-m { background: var(--bad); }
+.dbody { display: grid; gap: 6px; min-width: 0; }
+.dhead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.dwd { font-size: 1.02rem; }
+.dhol { color: var(--bad); font-weight: 700; font-size: 0.85rem; }
+.drows { display: grid; gap: 4px; }
+.drow { display: flex; justify-content: space-between; align-items: center; gap: 8px; background: var(--bagbg); border-left: 4px solid var(--bag); border-radius: 8px; padding: 5px 10px; }
+.drow-n { display: flex; align-items: center; gap: 6px; font-weight: 700; min-width: 0; }
+.drow-v { font-weight: 800; font-size: 1.02rem; white-space: nowrap; }
+.list .entry.dcard .dacts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; grid-column: 1 / -1; }
+.dacts .btn.small { padding: 6px 6px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.list .entry.dcard .row-actions { gap: 6px; }
+.dcard .badge-bad, .dcard .badge-over { justify-self: start; }
+
+/* Inici fits one phone screen */
+@media (max-width: 520px) {
+  body[data-tab="inici"] .hero { padding: 8px 12px; gap: 10px; box-shadow: none; }
+  body[data-tab="inici"] .hero-icon { width: 32px; height: 32px; }
+  body[data-tab="inici"] .hero h1 { font-size: 1.2rem; }
+  body[data-tab="inici"] .hero-kicker { font-size: 0.62rem; }
+  body[data-tab="inici"] .step { padding: 12px; gap: 10px; }
+  body[data-tab="inici"] #h1s, body[data-tab="inici"] #h1sub { display: none; }
+  body[data-tab="inici"] section.step .step-head { display: none; }
+  #haveBtn.btn.big { padding: 10px 14px; font-size: 0.95rem; }
+  .bigcards { gap: 8px; }
+  .bcard { padding: 8px 10px; gap: 4px; }
+  .bcard-name { font-size: 0.85rem; }
+  .bcard-big { font-size: 1.7rem; }
+  .bcard-big small { font-size: 0.75rem; margin-top: 0; }
+  .bcard .track { height: 6px; }
+  .bcard-years { gap: 3px; }
+  .byr { padding: 2px 5px; }
+  .spent summary { padding: 8px 0; }
+}
+
+/* Have-form */
+.have { display: grid; gap: 10px; border-top: 1px dashed var(--line); padding-top: 14px; }
+.have-row { display: grid; grid-template-columns: 1fr 120px; gap: 10px; align-items: center; }
+.have-row label { font-weight: 600; display: flex; align-items: center; gap: 8px; min-width: 0; }
+.have-row label em { font-style: normal; color: var(--muted); font-weight: 400; font-size: 0.88rem; }
+input[type="text"], input[type="date"], textarea {
+  color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; width: 100%; min-width: 0; font-size: 1rem;
+}
+textarea { resize: vertical; min-height: 46px; }
+.q { font-weight: 700; font-size: 1rem; }
+.hint { color: var(--muted); font-size: 0.88rem; margin: 0; }
+.field { display: grid; gap: 6px; }
+
+/* Duration choice */
+.choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.choice { border: 2px solid var(--line); border-radius: 12px; padding: 10px 6px; text-align: center; cursor: pointer; background: var(--surface); display: grid; gap: 2px; position: relative; }
+.choice input { position: absolute; opacity: 0; pointer-events: none; }
+.choice b { font-size: 0.98rem; }
+.choice small { color: var(--muted); font-size: 0.8rem; }
+.choice:has(input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+.choices.two { grid-template-columns: repeat(2, 1fr); }
+.torn { display: grid; gap: 6px; margin-top: 4px; }
+.choice:has(input:focus-visible) { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Where from */
+.src { display: grid; gap: 8px; }
+.ycards { display: grid; gap: 10px; }
+.ycard { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--surface-2); display: grid; gap: 8px; }
+.ycard-h { display: flex; align-items: baseline; gap: 8px; }
+.ycard-h span { font-weight: 800; font-size: 1.1rem; }
+.ycard-h small { color: var(--muted); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
+.tile { border: 2px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 10px; padding: 8px 10px; text-align: left; display: grid; gap: 2px; }
+.tile b { display: flex; align-items: center; gap: 6px; font-size: 0.95rem; }
+.tile span { font-size: 0.85rem; color: var(--muted); }
+.tile[aria-pressed="true"] { border-color: var(--bag); background: var(--bagbg); }
+.tile[aria-pressed="true"] b::after { content: "✓"; margin-left: auto; color: var(--bag); }
+.tile.neg span { color: var(--bad); font-weight: 700; }
+.picked { display: grid; gap: 8px; }
+.picked:empty { display: none; }
+.stepper .rm { width: 32px; height: 32px; font-size: 0.9rem; color: var(--muted); margin-left: 4px; }
+.src-sep { display: grid; gap: 2px; margin-top: 10px; padding-top: 12px; border-top: 1px dashed var(--line); }
+.src-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--surface-2); }
+.src-row.on { border-color: var(--bag); background: var(--bagbg); }
+.src-row.spent { opacity: 0.5; }
+.src-row.spent .src-left { font-weight: 700; }
+.stepper input:disabled { background: var(--surface-2); }
+.src-name { font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.src-left { color: var(--muted); font-size: 0.84rem; }
+.stepper { display: flex; align-items: center; gap: 4px; }
+.stepper button { width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 1.2rem; font-weight: 700; line-height: 1; }
+.stepper button:disabled { opacity: 0.3; cursor: not-allowed; }
+.stepper input { width: 64px; text-align: center; padding: 8px 4px; font-weight: 700; }
+.stepper span { width: 32px; color: var(--muted); font-size: 0.85rem; }
+
+/* Coverage */
+.cover { border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; background: var(--surface-2); font-weight: 700; }
+.cover.bad { background: var(--bad-bg); color: var(--bad); }
+.cover.ok { background: var(--ok-bg); color: var(--ok); }
+.cover.over { background: var(--warn-bg); color: var(--warn); }
+.bar { height: 12px; border-radius: 99px; background: var(--line); overflow: hidden; display: flex; }
+.bar i { display: block; height: 100%; background: var(--bag); }
+.fill { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.fill .hint { width: 100%; }
+.chip-btn { border: 1px solid var(--bag); color: var(--ink); background: var(--bagbg); border-radius: 999px; padding: 7px 13px; font-size: 0.9rem; font-weight: 600; }
+.chip-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.errors { background: var(--bad-bg); color: var(--bad); border-radius: 12px; padding: 12px 14px; font-weight: 700; display: grid; gap: 4px; }
+
+/* Log */
+.list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.entry { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; background: var(--surface-2); }
+.entry.short { border-color: var(--bad); background: var(--bad-bg); }
+.entry .top { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; align-items: baseline; }
+.entry .date { font-weight: 700; }
+.entry .date::first-letter { text-transform: uppercase; }
+.pill { font-size: 0.8rem; font-weight: 700; border-radius: 999px; padding: 2px 10px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { background: var(--bagbg); color: var(--bag); border-radius: 999px; padding: 3px 11px; font-size: 0.88rem; font-weight: 700; }
+.badge-bad { background: var(--bad); color: #fff; border-radius: 999px; padding: 3px 11px; font-size: 0.88rem; font-weight: 700; }
+.badge-over { background: var(--warn-bg); color: var(--warn); border-radius: 999px; padding: 3px 11px; font-size: 0.88rem; font-weight: 700; }
+.from { display: grid; gap: 6px; }
+.from-label { font-size: 0.85rem; font-weight: 700; color: var(--muted); }
+.cover .from-label { color: inherit; opacity: 0.85; }
+.cover .chip { font-weight: 700; }
+.entry .notes { color: var(--muted); font-size: 0.92rem; overflow-wrap: anywhere; }
+.row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.empty { color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; padding: 16px; text-align: center; }
+
+/* Help and backup */
+details { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 0 18px; }
+details[open] { padding-bottom: 16px; }
+summary { cursor: pointer; font-weight: 700; padding: 14px 0; list-style-position: inside; }
+details ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+details .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.storage-warn { background: var(--warn-bg); color: var(--warn); border-radius: 12px; padding: 12px 14px; font-weight: 700; }
+
+/* Toast */
+.toast { position: fixed; left: 50%; bottom: calc(84px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 999px; font-weight: 600; box-shadow: 0 6px 24px rgba(0,0,0,.25); max-width: calc(100% - 32px); text-align: center; z-index: 20; }
+.toast.err { background: var(--bad); color: #fff; }
+
+/* Email dialog */
+.dlg { border: none; border-radius: 16px; padding: 0; width: min(560px, calc(100% - 24px)); max-height: calc(100% - 24px); background: var(--surface); color: var(--ink); box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+.dlg::backdrop { background: rgba(10, 20, 22, 0.55); }
+.dlg-body { padding: 18px; display: grid; gap: 12px; }
+.dlg h2 { font-size: 1.2rem; }
+.dlg textarea { min-height: 220px; font-size: 0.95rem; line-height: 1.45; }
+.dlg .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+a.btn { text-decoration: none; display: inline-block; }
+.btn.mail { border-color: var(--accent); color: var(--accent); }
+.settings { display: grid; gap: 10px; }
+.check { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-weight: 600; }
+.check input { width: 20px; height: 20px; }
+.profile-in { display: grid; gap: 8px; background: var(--warn-bg); border: 1px solid var(--warn); border-radius: 12px; padding: 12px; }
+.profile-in > b { color: var(--warn); }
+.install { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: var(--accent-soft); border: 1px solid var(--accent); border-radius: var(--radius); padding: 12px 14px; }
+.install span { flex: 1 1 180px; }
+.src-name, .bal-name, .have-row label { align-items: flex-start; }
+.src-name .dot, .bal-name .dot, .have-row label .dot { margin-top: 0.4em; }
+@media (max-width: 520px) {
+  .src-row { grid-template-columns: 1fr; gap: 8px; }
+  .stepper { justify-content: flex-start; }
+  .stepper button { width: 44px; height: 44px; }
+  .stepper input { width: 80px; }
+  .have-row { grid-template-columns: 1fr 100px; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div class="hero">
+      <svg class="hero-icon" viewBox="0 0 48 48" aria-hidden="true">
+        <rect x="5" y="9" width="38" height="34" rx="6" fill="#ffffff"/>
+        <rect x="5" y="9" width="38" height="10" rx="6" fill="#0a524a"/>
+        <rect x="5" y="15" width="38" height="4" fill="#0a524a"/>
+        <rect x="14" y="5" width="4" height="9" rx="2" fill="#ffffff"/>
+        <rect x="30" y="5" width="4" height="9" rx="2" fill="#ffffff"/>
+        <circle cx="15" cy="28" r="3.5" fill="#2f8f4e"/>
+        <circle cx="24" cy="28" r="3.5" fill="#2c63b8"/>
+        <circle cx="33" cy="28" r="3.5" fill="#c25e12"/>
+        <rect x="13" y="35" width="22" height="3" rx="1.5" fill="#d6dfdd"/>
+      </svg>
+      <div class="hero-text">
+        <span class="hero-kicker">CP Lledoners</span>
+        <h1>Vacances i hores</h1>
+      </div>
+      <button class="theme-btn" type="button" id="themeBtn" aria-label="Canvia entre clar i fosc"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17z" fill="currentColor"/></svg></button>
+      <button class="theme-btn" type="button" id="menuBtn" aria-label="Menú: les teves dades i opcions" aria-expanded="false"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    </div>
+    <div class="install" id="installBox" hidden style="margin-top:12px">
+      <span><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M12 7v6.5M9.5 11l2.5 2.5 2.5-2.5"/></svg> Pots instal·lar-la com una app, amb la seva icona i sense internet.</span>
+      <button class="btn primary" type="button" id="installBtn">Instal·la l'app</button>
+    </div>
+  </header>
+
+  <div class="years" id="years" aria-label="Tria l'any"></div>
+
+  <section class="welcome" id="profileBox" aria-labelledby="pTitle" hidden>
+    <b id="pTitle">Primer de tot: les teves dades</b>
+    <span>Les farem servir per omplir sols els correus de sol·licitud. Només cal posar-les una vegada.</span>
+    <div class="settings">
+      <label class="field"><span class="q">Nom</span><input type="text" id="pNom" autocomplete="given-name"></label>
+      <label class="field"><span class="q">Cognoms</span><input type="text" id="pCognoms" autocomplete="family-name"></label>
+      <label class="field"><span class="q">Guàrdia / lloc de treball</span><input type="text" id="pLloc" autocomplete="organization"></label>
+      <label class="field"><span class="q">El teu correu corporatiu</span><input type="text" id="pCorp" inputmode="email" autocomplete="email" placeholder="nom.cognom@gencat.cat"></label>
+    </div>
+    <div><button class="btn primary" type="button" id="pSave">Desa les meves dades</button></div>
+  </section>
+
+  <div class="welcome" id="welcome" hidden>
+    <b id="welcomeTitle">Comença aquí.</b>
+    <span id="welcomeText">Primer digues quants dies de vacances i quantes hores tens de cada tipus per a aquest any.</span>
+    <div><button class="btn primary" type="button" id="welcomeBtn">Posar el que tinc</button></div>
+  </div>
+
+  <!-- Step 1 -->
+  <section class="step" aria-labelledby="h1s">
+    <div class="step-head">
+      <span class="step-no" aria-hidden="true">1</span>
+      <div><h2 id="h1s">Què et queda</h2><p id="h1sub">De cada cosa i de cada any.</p></div>
+    </div>
+    <div class="bigcards" id="bigCards"></div>
+    <details class="spent" id="detailBox">
+      <summary><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V11M10 20V5M16 20v-7M21 20H3"/></svg> Detall per anys</summary>
+      <div class="ydetail" id="ydetail"></div>
+      <div class="qwrap" hidden><table class="qtable num" id="qtable"></table></div>
+    </details>
+    <details class="spent" id="spentBox" hidden>
+      <summary><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7l6 6 4-4 8 8"/><path d="M21 11v6h-6"/></svg> Què he gastat</summary>
+      <div class="qwrap"><table class="qtable num" id="stable"></table></div>
+    </details>
+    <div><button class="btn small" type="button" id="haveBtn" data-big="1"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg> Canviar el que tinc</button></div>
+    <form class="have" id="haveForm" hidden>
+      <p class="hint" id="haveHint">Escriu el total que tens per a l'any. Deixa-ho en blanc si no en tens.</p>
+      <div id="haveFields" style="display:grid;gap:10px"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn primary" type="submit">Desa</button>
+        <button class="btn" type="button" id="haveCancel">Cancel·la</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Step 2 -->
+  <section class="step" aria-labelledby="formTitle" id="formSec">
+    <div class="step-head">
+      <span class="step-no" aria-hidden="true">2</span>
+      <div><h2 id="formTitle">Apunta un dia de festa</h2><p id="formSub">Omple les tres preguntes i desa.</p></div>
+    </div>
+    <form id="entryForm" novalidate style="display:grid;gap:16px">
+      <label class="field date-row"><span class="q">Quin dia?</span><input type="date" id="fDate" required></label>
+
+      <div class="field">
+        <span class="q" id="durQ">Quant temps fas festa?</span>
+        <div class="choices" role="radiogroup" aria-labelledby="durQ">
+          <label class="choice"><input type="radio" name="dur" id="durMig" value="mig"><b>Mig dia</b><small>7,5 hores</small></label>
+          <label class="choice"><input type="radio" name="dur" id="durSencer" value="sencer" checked><b>Dia sencer</b><small>14,5 hores</small></label>
+          <label class="choice"><input type="radio" name="dur" id="durHores" value="hores"><b>Unes hores</b><small>les que diguis</small></label>
+        </div>
+        <div class="torn" id="tornBox" hidden>
+          <span class="hint" id="tornQ">Quin mig dia?</span>
+          <div class="choices two" role="radiogroup" aria-labelledby="tornQ">
+            <label class="choice"><input type="radio" name="torn" id="tornMati" value="mati" checked><b><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18M7 19a5 5 0 0 1 10 0"/><path d="M12 4v5M9.5 6.5 12 4l2.5 2.5M4.6 12.6l1.4 1.4M19.4 12.6 18 14"/></svg> Matí</b></label>
+            <label class="choice"><input type="radio" name="torn" id="tornTarda" value="tarda"><b><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18M7 19a5 5 0 0 1 10 0"/><path d="M12 9V4M9.5 6.5 12 9l2.5-2.5M4.6 12.6l1.4 1.4M19.4 12.6 18 14"/></svg> Tarda</b></label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <span class="q">D'on ho treus?</span>
+        <p class="hint">Toca el que vols fer servir: s'omple sol amb el que falta. Pots tocar-ne més d'un per barrejar.</p>
+        <div class="ycards" id="src"></div>
+        <div class="picked" id="picked"></div>
+      </div>
+
+      <div class="cover" id="cover" aria-live="polite"></div>
+
+      <div><button class="btn link" type="button" id="noteBtn">+ Afegeix una nota</button></div>
+      <label class="field" id="noteField" hidden><span class="q">Nota <span class="hint" style="display:inline">(opcional)</span></span><textarea id="fNotes" rows="2" placeholder="Per exemple: pont de Nadal"></textarea></label>
+
+      <div class="errors" id="errors" hidden></div>
+      <button class="btn primary big" type="submit" id="saveBtn">Desa aquest dia</button>
+      <button class="btn link" type="button" id="cancelEdit" hidden>Cancel·la l'edició</button>
+    </form>
+  </section>
+
+  <section class="step cal" aria-labelledby="hCal">
+    <div class="cal-head">
+      <button class="btn small" type="button" id="calPrev" aria-label="Mes anterior">‹</button>
+      <h2 id="hCal">Calendari</h2>
+      <button class="btn small" type="button" id="calNext" aria-label="Mes següent">›</button>
+    </div>
+    <div class="cal-sub"><span id="calMonth" class="cal-month"></span><button class="btn link" type="button" id="calToday">Avui</button></div>
+    <div class="cal-grid" id="calGrid" role="grid" aria-labelledby="calMonth"></div>
+    <div class="cal-legend" id="calLegend"></div>
+    <div class="cal-hols" id="calHols" hidden></div>
+    <p class="hint">Toca un dia lliure per apuntar-lo, o un dia pintat per veure'l a la llista.</p>
+  </section>
+
+  <!-- Step 3 -->
+  <section class="step" aria-labelledby="h3s">
+    <div class="step-head">
+      <span class="step-no" aria-hidden="true">3</span>
+      <div><h2 id="h3s">Els teus dies demanats</h2><p id="count">Tots els dies que has demanat.</p></div>
+    </div>
+    <ul class="list" id="list"></ul>
+  </section>
+
+  <details>
+    <summary>Com es compta?</summary>
+    <ul>
+      <li><b>Mig dia</b> = 7,5 hores = <b>1 dia</b> de vacances.</li>
+      <li><b>Dia sencer</b> = 14,5 hores = <b>2 dies</b> de vacances.</li>
+      <li>Les vacances es compten en <b>dies</b>. La resta (hores personals, compensació de festius, formació i hores extres) en <b>hores</b>.</li>
+      <li>Si un dia <b>no està cobert del tot</b>, surt en vermell amb les hores que falten.</li>
+      <li>La pàgina <b>no et deixa desar</b> si et passaries d'algun saldo.</li>
+      <li>Si et queden hores o dies d'<b>un altre any</b> (anterior o posterior), quan apuntis un dia surten a sota del formulari i els pots barrejar amb els de l'any triat. Perquè surtin, aquell any ha de tenir posat el que tens.</li>
+      <li>Cada <b>any</b> té el seu saldo. Tria l'any a dalt de tot: el dia que apuntis comptarà per a aquest any, encara que la data sigui d'un altre (per exemple, vacances de 2026 fetes el gener de 2027).</li>
+    </ul>
+  </details>
+
+  <details id="mailSettings">
+    <summary>Les teves dades (per als correus)</summary>
+    <p class="hint">Es fan servir per omplir sols els correus de sol·licitud. Només es guarden en aquest aparell.</p>
+    <div class="settings">
+      <label class="field"><span class="q">Nom</span><input type="text" id="cfgNom" autocomplete="given-name"></label>
+      <label class="field"><span class="q">Cognoms</span><input type="text" id="cfgCognoms" autocomplete="family-name"></label>
+      <label class="field"><span class="q">Guàrdia / lloc de treball</span><input type="text" id="cfgLloc" autocomplete="organization"></label>
+      <label class="field"><span class="q">El teu correu corporatiu</span><input type="text" id="cfgCorp" inputmode="email" autocomplete="email" placeholder="nom.cognom@gencat.cat"></label>
+      <label class="field"><span class="q">Correu on s'envien les sol·licituds</span><input type="text" id="cfgMail" inputmode="email" autocomplete="off"></label>
+    </div>
+  </details>
+
+  <details>
+    <summary>Còpia de seguretat i opcions</summary>
+    <p class="hint">Tot es guarda en aquest navegador i en aquest aparell, sense internet. Descarrega una còpia de tant en tant. Per passar les dades a un altre aparell, descarrega la còpia aquí i carrega-la allà.</p>
+    <div class="storage-warn" id="storageWarn" hidden>Aquest navegador no deixa guardar (potser és una finestra privada). El que apuntis es perdrà en tancar la pàgina.</div>
+    <div class="actions">
+      <button class="btn" type="button" id="exportJson"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg> Descarrega una còpia</button>
+      <button class="btn" type="button" id="importBtn"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20V9M7 13.5l5-5 5 5M5 4h14"/></svg> Carrega una còpia</button>
+      <button class="btn" type="button" id="exportCsv"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg> Descarrega per a Excel</button>
+      <input type="file" id="importFile" accept=".json,application/json" hidden>
+    </div>
+    <div class="actions">
+      <button class="btn danger" type="button" id="resetAll">Esborra aquest any</button>
+    </div>
+    <div class="errors" id="resetConfirm" hidden style="margin-top:10px">
+      <div id="resetText">S'esborraran tots els dies i el que tens posat d'aquest any. No es pot desfer. Si ho vols conservar, fes abans «Descarrega una còpia».</div>
+      <div class="actions">
+        <button class="btn primary" type="button" id="resetYes" style="background:var(--bad);border-color:var(--bad);color:#fff">Sí, esborra'l</button>
+        <button class="btn" type="button" id="resetNo">Cancel·la</button>
+      </div>
+    </div>
+  </details>
+</main>
+<button type="button" class="fab" id="fab" aria-label="Apunta un dia nou"><svg class="ic fab-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+<nav class="tabbar" aria-label="Seccions">
+  <button type="button" class="tab" data-tab="inici"><span class="ti"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5h4v5"/></svg></span><span>Inici</span></button>
+  <button type="button" class="tab" data-tab="apuntar"><span class="ti"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span>Apuntar</span></button>
+  <button type="button" class="tab" data-tab="calendari"><span class="ti"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span><span>Calendari</span></button>
+  <button type="button" class="tab" data-tab="dies"><span class="ti"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="3"/></svg></span><span>Els meus dies</span></button>
+</nav>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="update-bar" id="updateBar" role="status" hidden><span>Hi ha una versió nova</span><button class="btn small" type="button" id="updateBtn">Actualitza</button></div>
+
+<dialog id="mailDlg" class="dlg" aria-labelledby="mailTitle">
+  <div class="dlg-body">
+    <h2 id="mailTitle">Demana-ho per correu</h2>
+    <p class="hint">Revisa el missatge i canvia el que vulguis. Per enviar-lo des del correu corporatiu, toca «Obre a Outlook»: s'obrirà el missatge ja omplert i només hauràs de prémer Enviar (has de tenir la sessió oberta amb el correu de la feina). «Obre el correu de l'aparell» fa servir el compte que tinguis configurat al mòbil o a l'ordinador.</p>
+    <div class="profile-in" id="mProfile" hidden>
+      <b>Falten les teves dades</b>
+      <div class="settings">
+        <label class="field"><span class="q">Nom</span><input type="text" id="mNom" autocomplete="given-name"></label>
+        <label class="field"><span class="q">Cognoms</span><input type="text" id="mCognoms" autocomplete="family-name"></label>
+        <label class="field"><span class="q">Guàrdia / lloc de treball</span><input type="text" id="mLloc" autocomplete="organization"></label>
+      <label class="field"><span class="q">El teu correu corporatiu</span><input type="text" id="mCorp" inputmode="email" autocomplete="email" placeholder="nom.cognom@gencat.cat"></label>
+      </div>
+      <span class="hint">Es guarden i la propera vegada ja sortiran posades.</span>
+    </div>
+    <label class="field"><span class="q">Per a</span><input type="text" id="mTo" inputmode="email" autocomplete="off"></label>
+    <label class="check"><input type="checkbox" id="mCc" checked> Envia'm una còpia al meu correu corporatiu <span id="mCcAddr" class="hint"></span></label>
+    <label class="field"><span class="q">Assumpte</span><input type="text" id="mSubj" autocomplete="off"></label>
+    <label class="field"><span class="q">Missatge</span><textarea id="mBody" rows="12"></textarea></label>
+    <div class="actions">
+      <a class="btn primary" id="mOutlook" href="#" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 3 10 14"/><path d="M21 3l-7 18-4-7-7-4z"/></svg> Obre a Outlook (correu corporatiu)</a>
+      <a class="btn link" id="mOutlookWeb" href="#" target="_blank" rel="noopener" hidden>No s'obre? Prova-ho a Outlook web</a>
+      <a class="btn" id="mSend" href="#"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/></svg> Obre el correu de l'aparell</a>
+      <button class="btn" type="button" id="mCopy"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg> Copia el text</button>
+      <button class="btn" type="button" id="mClose">Tanca</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(function () {
+  const BAGS = [
+    { k: "vac", name: "Vacances", unit: "dies", step: 1 },
+    { k: "ap", name: "Hores personals (AP)", unit: "h", step: 0.5 },
+    { k: "cf", name: "Compensació de festius (CF)", unit: "h", step: 0.5 },
+    { k: "form", name: "Formació", unit: "h", step: 0.5 },
+    { k: "hex", name: "Hores extres", unit: "h", step: 0.5 }
+  ];
+  const NEED = { mig: 7.5, sencer: 14.5 };
+  const DUR = { mig: "Mig dia", sencer: "Dia sencer", hores: "Unes hores" };
+  const TORN = { mati: "matí", tarda: "tarda" };
+  const durLabel = (e) => (e.durada === "mig" && TORN[e.torn] ? `Mig dia · ${TORN[e.torn]}` : DUR[e.durada] || "—");
+  const tornValue = () => (document.querySelector('input[name="torn"]:checked') || {}).value || "mati";
+  const KEY = "vacances-i-hores-proves-v1";
+  const START = {"version": 2, "disp": {}, "dies": []};
+  const $ = (id) => document.getElementById(id);
+  const ICONS = { plus: '<path d="M12 5v14M5 12h14"/>', sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>', moon: '<path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a6.5 6.5 0 0 0 10 10z"/>', auto: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17z" fill="currentColor"/>', pencil: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>', mail: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/>'};
+  function icon(name) {
+    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("class", "ic"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true");
+    s.innerHTML = ICONS[name];
+    return s;
+  }
+
+  /* ---------- Light / dark ---------- */
+  const THEME_KEY = "vacances-i-hores-tema";
+  const THEMES = { auto: { icon: "auto", label: "Auto" }, light: { icon: "sun", label: "Clar" }, dark: { icon: "moon", label: "Fosc" } };
+  let theme = "auto";
+  try { theme = localStorage.getItem(THEME_KEY) || "auto"; } catch (e) { /* default */ }
+  if (!THEMES[theme]) theme = "auto";
+  function applyTheme() {
+    if (theme === "auto") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", theme);
+    const dark = theme === "dark" || (theme === "auto" && window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", dark ? "#0f4f48" : "#0e6e63");
+    const btn = $("themeBtn");
+    if (btn) {
+      btn.replaceChildren(icon(THEMES[theme].icon), Object.assign(document.createElement("small"), { textContent: THEMES[theme].label }));
+      btn.title = `Mode: ${THEMES[theme].label}. Toca per canviar.`;
+    }
+  }
+  applyTheme();
+  $("themeBtn").addEventListener("click", () => {
+    theme = theme === "auto" ? "light" : theme === "light" ? "dark" : "auto";
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) { /* not saved */ }
+    applyTheme();
+  });
+  if (window.matchMedia) { try { matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme); } catch (e) { /* old browsers */ } }
+
+  // allDisp: { "2026": {vac, ap, ...}, ... }; allEntries: every day, each with `any` (the year it counts for).
+  // disp / entries are the selected year's slice, refreshed by sync().
+  let allDisp = {}, allEntries = [], year = String(new Date().getFullYear());
+  let disp = {}, entries = [], editingId = null;
+  function sync() {
+    disp = allDisp[year] || {};
+    entries = allEntries.filter((e) => String(e.any) === year);
+  }
+  function yearList() {
+    const s = new Set(Object.keys(allDisp));
+    allEntries.forEach((e) => s.add(String(e.any)));
+    const cy = new Date().getFullYear();
+    s.add(String(cy)); s.add(String(cy + 1));
+    s.add(year);
+    return [...s].filter((y) => /^\d{4}$/.test(y)).sort();
+  }
+  // Accepts the old one-balance format and the per-year format.
+  function normalize(state) {
+    const fallback = String(new Date().getFullYear());
+    if (state && state.version === 2) {
+      const d = state.disp && typeof state.disp === "object" ? state.disp : {};
+      const dies = Array.isArray(state.dies) ? state.dies : [];
+      return { disp: d, dies: dies.map((e) => Object.assign({}, e, { any: String(e.any || (e.date || fallback).slice(0, 4)) })), year: state.year ? String(state.year) : fallback };
+    }
+    const old = state && state.disp && typeof state.disp === "object" ? state.disp : {};
+    const dies = state && Array.isArray(state.dies) ? state.dies : [];
+    const d = {};
+    if (Object.values(old).some((v) => typeof v === "number") || dies.length) d[fallback] = old;
+    return { disp: d, dies: dies.map((e) => Object.assign({}, e, { any: fallback })), year: fallback };
+  }
+
+  const fmt = (n) => (Math.round(n * 100) / 100).toLocaleString("ca-ES", { maximumFractionDigits: 2 });
+  const unitWord = (b, n) => b.unit === "dies" ? (Math.abs(n) === 1 ? "dia" : "dies") : (Math.abs(n) === 1 ? "hora" : "hores");
+  const parse = (s) => { const t = String(s == null ? "" : s).trim().replace(",", "."); if (t === "") return 0; const n = Number(t); return isFinite(n) ? n : NaN; };
+  const num = (v) => (typeof v === "number" && isFinite(v) ? v : 0);
+  const hoursFromDays = (d) => d * 7.5 - Math.floor(d / 2) * 0.5;
+  const daysFromHours = (h) => Math.abs(h - 14.5) < 1e-9 ? 2 : Math.round((h / 7.5) * 100) / 100;
+  // A day takes from its own year (fields vac, ap, ...) and, optionally, from earlier years' leftovers (extra: {"2026": {cf: 6}}).
+  const amountOf = (e, y, k) => String(e.any) === y ? num(e[k]) : num(e.extra && e.extra[y] && e.extra[y][k]);
+  const yearsOf = (e) => [String(e.any), ...Object.keys(e.extra || {}).filter((y) => y !== String(e.any))];
+  function totals(e) {
+    const t = { vac: 0, ap: 0, cf: 0, form: 0, hex: 0 };
+    for (const y of yearsOf(e)) for (const b of BAGS) t[b.k] += amountOf(e, y, b.k);
+    return t;
+  }
+  const hoursOf = (t) => hoursFromDays(t.vac) + t.ap + t.cf + t.form + t.hex;
+  const covered = (e) => hoursOf(totals(e));
+  const missing = (e) => (e.durada === "mig" || e.durada === "sencer") ? NEED[e.durada] - covered(e) : null;
+  const dispOf = (y, k) => { const d = allDisp[y]; return d && typeof d[k] === "number" && isFinite(d[k]) ? d[k] : null; };
+  const hasDisp = (k) => dispOf(year, k) != null;
+  function spentFor(y, excludeId) {
+    const s = { vac: 0, ap: 0, cf: 0, form: 0, hex: 0 };
+    for (const e of allEntries) { if (e.id === excludeId) continue; for (const b of BAGS) s[b.k] += amountOf(e, y, b.k); }
+    return s;
+  }
+  const spent = (excludeId) => spentFor(year, excludeId);
+  const el = (tag, cls, text) => { const x = document.createElement(tag); if (cls) x.className = cls; if (text != null) x.textContent = text; return x; };
+  const bagStyle = (node, k) => { node.style.setProperty("--bag", `var(--${k})`); node.style.setProperty("--bagbg", `var(--${k}-bg)`); };
+
+  let toastTimer = null;
+  function toast(msg, isErr) {
+    const t = $("toast");
+    t.textContent = msg; t.classList.toggle("err", !!isErr); t.hidden = false;
+    t.classList.remove("pop"); void t.offsetWidth; t.classList.add("pop");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.hidden = true; }, isErr ? 6000 : 2600);
+  }
+
+  /* ---------- Storage ---------- */
+  function persist() {
+    try { localStorage.setItem(KEY, JSON.stringify({ version: 2, disp: allDisp, dies: allEntries, year, savedAt: new Date().toISOString() })); $("storageWarn").hidden = true; }
+    catch (e) { $("storageWarn").hidden = false; }
+  }
+  function loadState() {
+    let state = null, fresh = false;
+    try { const raw = localStorage.getItem(KEY); if (raw) state = JSON.parse(raw); } catch (e) { $("storageWarn").hidden = false; }
+    if (!state || typeof state !== "object") { state = JSON.parse(JSON.stringify(START)); fresh = true; }
+    const n = normalize(state);
+    allDisp = n.disp; allEntries = n.dies; year = n.year;
+    sync();
+    if (fresh || state.version !== 2) persist();
+  }
+  function renderYears() {
+    const box = $("years");
+    const label = el("span", "label", "De quin any?");
+    const btns = yearList().map((y) => {
+      const b = el("button", "year-btn", y); b.type = "button";
+      b.setAttribute("aria-pressed", y === year ? "true" : "false");
+      b.addEventListener("click", () => { if (y !== year) switchYear(y); });
+      return b;
+    });
+    const add = el("button", "year-add", "+ Afegeix any"); add.type = "button";
+    add.addEventListener("click", () => {
+      const ys = yearList();
+      const next = String(Number(ys[ys.length - 1]) + 1);
+      if (!allDisp[next]) allDisp[next] = {};
+      switchYear(next);
+      toast(`Any ${next} afegit. Posa el que tens.`);
+    });
+    box.replaceChildren(label, ...btns, add);
+  }
+  function switchYear(y) {
+    const wasOpen = !$("haveForm").hidden;
+    year = y; sync(); persist();
+    $("resetConfirm").hidden = true;
+    resetForm(); renderAll();
+    if (wasOpen) openHave();
+  }
+
+  /* ---------- Step 1: what's left (compact table, every year) ---------- */
+  function renderBalance() {
+    $("welcome").hidden = BAGS.some((b) => hasDisp(b.k)) || entries.length > 0;
+    $("welcomeTitle").textContent = "Comença aquí";
+    $("welcomeText").textContent = `Digues quants dies de vacances i quantes hores tens de cada tipus per a l'any ${year}. Ho fas una vegada per any.`;
+    $("haveBtn").replaceChildren(icon("plus"), document.createTextNode(" Afegeix les hores i dies que tens de cada any"));
+    $("haveHint").textContent = `Escriu el total que tens per a l'any ${year}. Deixa-ho en blanc si no en tens.`;
+    $("formSub").textContent = editingId ? "Fes els canvis i desa." : "Omple les tres preguntes i desa.";
+    $("h3s").textContent = "Els teus dies demanats";
+    $("resetAll").textContent = `Esborra l'any ${year}`;
+    $("resetText").textContent = `S'esborraran tots els dies i el que tens posat de l'any ${year}. Els altres anys no es toquen. No es pot desfer. Si ho vols conservar, fes abans «Descarrega una còpia».`;
+
+    const ys = yearList().filter((y) => y === year || BAGS.some((b) => dispOf(y, b.k) != null));
+    const bags = BAGS.filter((b) => ys.some((y) => dispOf(y, b.k) != null));
+    const tbl = $("qtable");
+    if (!bags.length) {
+      tbl.replaceChildren();
+      const tr = el("tr"); const td = el("td", "qempty", "Encara no has posat res. Toca el botó verd de dalt.");
+      tr.append(td); tbl.append(tr);
+      $("spentBox").hidden = true;
+      $("detailBox").hidden = true;
+      $("bigCards").replaceChildren(el("div", "empty", "Encara no has posat res. Toca el botó verd de dalt per posar els dies i hores que tens."));
+      return;
+    }
+    const showTotal = ys.length > 1;
+    const head = el("tr");
+    head.append(el("th", "qname", ""));
+    ys.forEach((y) => { const th = el("th", y === year ? "sel" : null, y); head.append(th); });
+    if (showTotal) head.append(el("th", "qtot", "Total"));
+    const thead = el("thead"); thead.append(head);
+    const tbody = el("tbody");
+    const spentBy = {};
+    ys.forEach((y) => { spentBy[y] = spentFor(y, null); });
+    bags.forEach((b) => {
+      const tr = el("tr"); bagStyle(tr, b.k);
+      const nm = el("th", "qname"); nm.scope = "row";
+      nm.title = b.name;
+      nm.append(el("i", "dot"), document.createTextNode(b.unit === "dies" ? `${shortName[b.k]} (dies)` : `${shortName[b.k]} (h)`));
+      tr.append(nm);
+      let sum = 0, any = false;
+      ys.forEach((y) => {
+        const d = dispOf(y, b.k);
+        const td = el("td", y === year ? "sel" : null);
+        if (d == null) { td.textContent = "—"; td.classList.add("zero"); }
+        else {
+          const left = d - spentBy[y][b.k];
+          sum += left; any = true;
+          td.textContent = fmt(left);
+          td.title = `Tenies ${fmt(d)} · n'has gastat ${fmt(spentBy[y][b.k])}`;
+          if (left < -1e-9) td.classList.add("neg"); else if (Math.abs(left) < 1e-9) td.classList.add("zero");
+        }
+        tr.append(td);
+      });
+      if (showTotal) {
+        const td = el("td", "qtot", any ? fmt(sum) : "—");
+        if (sum < -1e-9) td.classList.add("neg");
+        tr.append(td);
+      }
+      tbody.append(tr);
+    });
+    tbl.replaceChildren(thead, tbody);
+    renderSpent(ys, bags, spentBy, showTotal);
+    renderBigCards(ys, bags, spentBy);
+  }
+  function renderYearDetail(ys, bags, spentBy) {
+    const years = ys.filter((y) => bags.some((b) => dispOf(y, b.k) != null)).sort();
+    $("ydetail").replaceChildren(...years.map((y) => {
+      const block = el("div", "yblock");
+      block.append(el("div", "yblock-h", y));
+      const tbl = el("table", "ytable num");
+      const head = el("tr");
+      head.append(el("th", "yname", ""), el("th", null, "Tenies"), el("th", null, "Gastat"), el("th", "yleft", "Queda"));
+      const thead = el("thead"); thead.append(head);
+      const tbody = el("tbody");
+      bags.filter((b) => dispOf(y, b.k) != null).forEach((b) => {
+        const had = dispOf(y, b.k), used = spentBy[y][b.k], left = had - used;
+        const tr = el("tr");
+        const nm = el("th", "yname"); nm.scope = "row"; nm.title = b.name;
+        const dot = el("i", "dot"); bagStyle(dot, b.k);
+        nm.append(dot, document.createTextNode(shortName[b.k]));
+        const l = el("td", "yleft"); l.append(document.createTextNode(fmt(left)), el("small", null, b.unit === "dies" ? " d" : " h"));
+        if (left < -1e-9) l.classList.add("neg"); else if (Math.abs(left) < 1e-9) l.classList.add("zero");
+        const u = el("td", null, fmt(used)); if (!(used > 0)) u.classList.add("zero");
+        tr.append(nm, el("td", null, fmt(had)), u, l);
+        tbody.append(tr);
+      });
+      tbl.append(thead, tbody);
+      block.append(tbl);
+      return block;
+    }));
+  }
+  function renderBigCards(ys, bags, spentBy) {
+    renderYearDetail(ys, bags, spentBy);
+    $("detailBox").hidden = false;
+    $("bigCards").replaceChildren(...bags.map((b) => {
+      const parts = ys.filter((y) => dispOf(y, b.k) != null).map((y) => ({ y, had: dispOf(y, b.k), left: dispOf(y, b.k) - spentBy[y][b.k] }));
+      const had = parts.reduce((a, x) => a + x.had, 0);
+      const left = parts.reduce((a, x) => a + x.left, 0);
+      const card = el("div", "bcard"); bagStyle(card, b.k);
+      const name = el("div", "bcard-name"); name.append(el("i", "dot"), document.createTextNode(b.name));
+      const big = el("div", "bcard-big num", fmt(left));
+      big.append(el("small", null, `${unitWord(b, left)} et queden`));
+      const track = el("div", "track"); const bar = el("i");
+      bar.style.width = (left < 0 ? 100 : had > 0 ? Math.max(0, Math.min(100, (left / had) * 100)) : 0) + "%";
+      track.append(bar);
+      card.append(name, big, track);
+      // One row per year: what is left of what you had that year.
+      const yrs = el("div", "bcard-years num");
+      parts.forEach((x) => {
+        const row = el("div", "byr");
+        if (x.left < -1e-9) row.classList.add("neg"); else if (Math.abs(x.left) < 1e-9) row.classList.add("zero");
+        const val = el("span", "byr-val");
+        val.append(el("b", null, fmt(x.left)), document.createTextNode(` de ${fmt(x.had)}`));
+        row.title = `${x.y}: et queden ${fmt(x.left)} de ${fmt(x.had)} ${unitWord(b, x.had)}`;
+        row.append(el("span", "byr-y", x.y), val);
+        yrs.append(row);
+      });
+      card.append(yrs);
+      if (left < -1e-9) { card.classList.add("neg"); card.append(el("div", "bal-alert", `⚠ T'has passat ${fmt(-left)} ${unitWord(b, -left)}`)); }
+      else if (Math.abs(left) < 1e-9) card.classList.add("zero");
+      return card;
+    }));
+  }
+  function renderSpent(ys, bags, spentBy, showTotal) {
+    const box = $("spentBox");
+    box.hidden = true;
+    if (!bags.length) return;
+    const head = el("tr");
+    head.append(el("th", "qname", ""));
+    ys.forEach((y) => head.append(el("th", y === year ? "sel" : null, y)));
+    if (showTotal) head.append(el("th", "qtot", "Total"));
+    const thead = el("thead"); thead.append(head);
+    const tbody = el("tbody");
+    bags.forEach((b) => {
+      const tr = el("tr");
+      const nm = el("th", "qname"); nm.scope = "row"; nm.title = b.name;
+      const dot = el("i", "dot"); bagStyle(dot, b.k);
+      nm.append(dot, document.createTextNode(b.unit === "dies" ? `${shortName[b.k]} (dies)` : `${shortName[b.k]} (h)`));
+      tr.append(nm);
+      let sum = 0;
+      ys.forEach((y) => {
+        const d = dispOf(y, b.k);
+        const used = spentBy[y][b.k];
+        sum += used;
+        const td = el("td", y === year ? "sel" : null);
+        if (d == null && !(used > 0)) { td.textContent = "—"; td.classList.add("zero"); }
+        else {
+          td.append(document.createTextNode(fmt(used)));
+          if (d != null) td.append(document.createTextNode(" "), el("small", null, `de ${fmt(d)}`));
+          if (!(used > 0)) td.classList.add("zero");
+        }
+        tr.append(td);
+      });
+      if (showTotal) tr.append(el("td", "qtot", fmt(sum)));
+      tbody.append(tr);
+    });
+    $("stable").replaceChildren(thead, tbody);
+  }
+  function buildHaveFields() {
+    $("haveFields").replaceChildren(...BAGS.map((b) => {
+      const row = el("div", "have-row"); bagStyle(row, b.k);
+      const lab = el("label"); lab.htmlFor = "have_" + b.k;
+      lab.append(el("i", "dot"), document.createTextNode(b.name + " "), el("em", null, b.unit === "dies" ? "(dies)" : "(hores)"));
+      const inp = el("input"); inp.type = "text"; inp.inputMode = "decimal"; inp.id = "have_" + b.k; inp.autocomplete = "off"; inp.placeholder = "—";
+      row.append(lab, inp);
+      return row;
+    }));
+  }
+  function openHave() {
+    for (const b of BAGS) $("have_" + b.k).value = hasDisp(b.k) ? fmt(disp[b.k]) : "";
+    $("haveForm").hidden = false;
+    $("have_vac").focus();
+  }
+  function saveHave(ev) {
+    ev.preventDefault();
+    const out = {};
+    for (const b of BAGS) {
+      const raw = $("have_" + b.k).value.trim();
+      if (raw === "") { out[b.k] = null; continue; }
+      const n = parse(raw);
+      if (isNaN(n) || n < 0) { toast(`A «${b.name}» hi ha d'anar un número.`, true); $("have_" + b.k).focus(); return; }
+      out[b.k] = n;
+    }
+    allDisp[year] = out; sync(); persist();
+    $("haveForm").hidden = true;
+    renderAll();
+    toast("Desat ✔");
+  }
+
+  /* ---------- Step 2: log a day ---------- */
+  // A "slot" is one balance of one year the form can take from: {y, b, id}.
+  // Only balances with something left (or already used by the day being edited) are offered.
+  let slots = [];
+  let vals = {};            // slot id -> typed text
+  let picked = new Set();   // slot ids the person tapped
+  const editingEntry = () => (editingId ? allEntries.find((x) => x.id === editingId) : null);
+  const slotLabel = (s) => `${s.b.name} ${s.y}`;
+  const shortName = { vac: "Vacances", ap: "AP", cf: "CF", form: "Formació", hex: "Hores extres" };
+
+  function buildSources() {
+    const ed = editingEntry();
+    const ys = [year, ...yearList().filter((y) => y !== year)];
+    slots = [];
+    for (const y of ys) {
+      for (const b of BAGS) {
+        const d = dispOf(y, b.k) || 0;
+        const used = ed ? amountOf(ed, y, b.k) : 0;
+        const left = d - spentFor(y, editingId)[b.k];
+        if (left > 1e-9 || used > 0) slots.push({ y, b, id: y + "_" + b.k });
+      }
+    }
+    renderSources();
+  }
+  function renderSources() {
+    const box = $("src");
+    if (!slots.length) {
+      box.replaceChildren(el("div", "empty", "Encara no tens res disponible. Posa el que tens a «Canviar el que tinc» (pas 1)."));
+      $("picked").replaceChildren();
+      return;
+    }
+    const tiles = el("div", "tiles");
+    slots.slice().sort((a, b) => a.y.localeCompare(b.y) || BAGS.indexOf(a.b) - BAGS.indexOf(b.b)).forEach((s) => {
+      const t = el("button", "tile"); t.type = "button"; t.id = "tile_" + s.id; bagStyle(t, s.b.k);
+      const name = el("b"); name.append(el("i", "dot"), document.createTextNode(shortName[s.b.k]), el("em", "tile-y", s.y));
+      t.append(name, el("span", "num"));
+      t.addEventListener("click", () => togglePick(s));
+      tiles.append(t);
+    });
+    box.replaceChildren(tiles);
+    renderPicked();
+  }
+  let adjustOpen = new Set();
+  function renderPicked() {
+    const rows = slots.filter((s) => picked.has(s.id)).map((s) => {
+      const open = adjustOpen.has(s.id);
+      const row = el("div", "pick-row"); row.id = "row_" + s.id; bagStyle(row, s.b.k);
+      const line = el("div", "pick-line");
+      const info = el("div", "pick-info");
+      const name = el("div", "src-name"); name.title = slotLabel(s); name.append(el("i", "dot"), document.createTextNode(`${shortName[s.b.k]} ${s.y}`));
+      const left = el("div", "src-left num"); left.id = "left_" + s.id;
+      info.append(name, left);
+      const val = el("span", "pick-val num"); val.id = "val_" + s.id;
+      const adj = el("button", "btn small", open ? "Fet" : "Ajusta"); adj.type = "button";
+      adj.setAttribute("aria-expanded", open ? "true" : "false");
+      adj.addEventListener("click", () => { if (open) adjustOpen.delete(s.id); else adjustOpen.add(s.id); renderPicked(); updateForm(); });
+      const x = el("button", "rm", "✕"); x.type = "button"; x.setAttribute("aria-label", "Treu " + slotLabel(s));
+      x.addEventListener("click", () => { adjustOpen.delete(s.id); togglePick(s); });
+      line.append(info, val, adj, x);
+      row.append(line);
+      const st = el("div", "stepper"); st.hidden = !open;
+      const minus = el("button", null, "−"); minus.type = "button"; minus.setAttribute("aria-label", "Menys " + slotLabel(s));
+      const inp = el("input"); inp.type = "text"; inp.inputMode = "decimal"; inp.id = "f_" + s.id; inp.placeholder = "0"; inp.autocomplete = "off";
+      inp.value = vals[s.id] || "";
+      inp.setAttribute("aria-label", slotLabel(s) + (s.b.unit === "dies" ? " en dies" : " en hores"));
+      const plus = el("button", null, "+"); plus.type = "button"; plus.id = "plus_" + s.id; plus.setAttribute("aria-label", "Més " + slotLabel(s));
+      const u = el("span", null, s.b.unit === "dies" ? "dies" : "h");
+      minus.addEventListener("click", () => bump(s, -1));
+      plus.addEventListener("click", () => bump(s, 1));
+      inp.addEventListener("input", () => { vals[s.id] = inp.value; updateForm(); });
+      st.append(minus, inp, plus, u);
+      row.append(st);
+      return row;
+    });
+    $("picked").replaceChildren(...rows);
+  }
+  function togglePick(s) {
+    if (picked.has(s.id)) {
+      picked.delete(s.id); delete vals[s.id];
+    } else {
+      picked.add(s.id);
+      // Fill what the day still needs, up to what is left of this balance.
+      const { clean } = readSlots();
+      const q = slotLeft(s, clean);
+      const dur = durValue();
+      if (dur !== "hores" && q > 1e-9) {
+        const need = NEED[dur] - hoursOf(slotTotals(clean));
+        if (need > 1e-9) {
+          let v;
+          if (s.b.k === "vac") {
+            const t = slotTotals(clean);
+            v = Math.max(0, daysFromHours(hoursFromDays(t.vac) + need) - t.vac);
+            v = Math.min(v, q);
+            // whole days only, and never over the day
+            v = Math.floor(v + 1e-9);
+            while (v > 0 && hoursFromDays(t.vac + v) - hoursFromDays(t.vac) > need + 1e-9) v -= 1;
+          } else {
+            v = Math.min(need, q);
+          }
+          if (v > 0) vals[s.id] = fmt(Math.round(v * 100) / 100);
+        }
+      }
+    }
+    renderPicked();
+    updateForm();
+  }
+  function readSlots() {
+    const clean = {}, bad = [];
+    for (const s of slots) {
+      const v = parse(vals[s.id] || "");
+      if (isNaN(v) || v < 0) { bad.push(s); clean[s.id] = 0; } else clean[s.id] = v;
+    }
+    return { clean, bad };
+  }
+  function slotTotals(clean) {
+    const t = { vac: 0, ap: 0, cf: 0, form: 0, hex: 0 };
+    for (const s of slots) t[s.b.k] += clean[s.id];
+    return t;
+  }
+  // A balance you haven't entered counts as 0: you can't take from it.
+  function slotLeft(s, clean) {
+    const d = dispOf(s.y, s.b.k) || 0;
+    return d - spentFor(s.y, editingId)[s.b.k] - clean[s.id];
+  }
+  const durValue = () => (document.querySelector('input[name="dur"]:checked') || {}).value || "sencer";
+  // Hours still free in the day (Infinity for "Unes hores").
+  function roomHours() {
+    const dur = durValue();
+    if (dur === "hores") return Infinity;
+    return NEED[dur] - hoursOf(slotTotals(readSlots().clean));
+  }
+  function bump(s, dir) {
+    const cur0 = parse(vals[s.id] || "");
+    const cur = isNaN(cur0) ? 0 : cur0;
+    let v = Math.max(0, Math.round((cur + dir * s.b.step) * 100) / 100);
+    if (dir > 0) {
+      const { clean } = readSlots();
+      const q = slotLeft(s, clean);
+      const maxV = cur + Math.max(0, q);
+      if (maxV <= cur + 1e-9) return;
+      if (v > maxV) v = Math.round(maxV * 100) / 100;
+      const room = roomHours();
+      if (s.b.k === "vac") {
+        const t = slotTotals(clean);
+        if (hoursFromDays(t.vac + (v - cur)) - hoursFromDays(t.vac) > room + 1e-9) return;
+      } else if (v - cur > room + 1e-9) {
+        if (room <= 1e-9) return;
+        v = Math.round((cur + room) * 100) / 100;
+      }
+    }
+    vals[s.id] = v > 0 ? fmt(v) : "";
+    const inp = $("f_" + s.id);
+    if (inp) inp.value = vals[s.id];
+    updateForm();
+  }
+
+  function updateForm() {
+    const dur = durValue();
+    $("tornBox").hidden = dur !== "mig";
+    const { clean, bad } = readSlots();
+    const t = slotTotals(clean);
+    const cov = hoursOf(t);
+    const room = dur === "hores" ? Infinity : NEED[dur] - cov;
+
+    // Tiles: what is left of each balance, after what this day takes.
+    for (const s of slots) {
+      const tile = $("tile_" + s.id);
+      if (!tile) continue;
+      const q = slotLeft(s, clean);
+      tile.setAttribute("aria-pressed", picked.has(s.id) ? "true" : "false");
+      const sp = tile.querySelector("span");
+      if (q < -1e-9) sp.textContent = "⚠ no en tens prou";
+      else { const v = Math.max(0, q); sp.replaceChildren(el("strong", null, `${fmt(v)} ${s.b.unit === "dies" ? unitWord(s.b, v) : "h"}`), document.createTextNode(" queden")); }
+      tile.classList.toggle("neg", q < -1e-9);
+    }
+    // Rows of the picked balances.
+    for (const s of slots) {
+      if (!picked.has(s.id)) continue;
+      const v = $("val_" + s.id);
+      if (v) { const n = clean[s.id]; v.textContent = n > 0 ? `${fmt(n)} ${s.b.unit === "dies" ? unitWord(s.b, n) : "h"}` : "0"; }
+      const q = slotLeft(s, clean);
+      const lt = $("left_" + s.id);
+      if (lt) {
+        lt.textContent = q < -1e-9 ? "⚠ No en tens prou" : `Et quedaran ${fmt(q)} ${unitWord(s.b, q)}`;
+        lt.style.color = q < -1e-9 ? "var(--bad)" : "";
+      }
+      const p = $("plus_" + s.id);
+      if (p) {
+        const noBalance = q <= 1e-9;
+        if (s.b.k === "vac") p.disabled = noBalance || hoursFromDays(t.vac + 1) - hoursFromDays(t.vac) > room + 1e-9;
+        else p.disabled = noBalance || room <= 1e-9;
+      }
+    }
+
+    const box = $("cover"); box.className = "cover"; box.replaceChildren();
+    const line = el("div", "num");
+    const bar = el("div", "bar");
+    const total = dur === "hores" ? Math.max(cov, 1e-9) : Math.max(NEED[dur], cov);
+    for (const b of BAGS) {
+      const h = b.k === "vac" ? hoursFromDays(t.vac) : t[b.k];
+      if (h > 0) { const i = el("i"); bagStyle(i, b.k); i.style.width = (h / total * 100) + "%"; bar.append(i); }
+    }
+    let miss = 0;
+    if (dur === "hores") {
+      line.textContent = cov > 0 ? `En total: ${fmt(cov)} hores` : "Toca d'on treus les hores i posa quantes.";
+    } else {
+      const need = NEED[dur]; miss = need - cov;
+      if (cov === 0) line.textContent = `Has de cobrir ${fmt(need)} hores. Toca d'on les treus.`;
+      else if (miss > 1e-9) { box.classList.add("bad"); line.textContent = `Et ${Math.abs(miss - 1) < 1e-9 ? "falta 1 hora" : "falten " + fmt(miss) + " hores"} (tens ${fmt(cov)} de ${fmt(need)}). Toca un altre saldo.`; }
+      else if (miss < -1e-9) { box.classList.add("bad"); line.textContent = `T'has passat ${fmt(-miss)} hores: un ${dur === "mig" ? "mig dia" : "dia sencer"} són ${fmt(need)} hores`; }
+      else { box.classList.add("ok"); line.textContent = `✔ Dia cobert (${fmt(need)} hores)`; }
+    }
+    box.append(line, bar);
+    const holDay = holidayOf($("fDate").value);
+    if (holDay) box.append(el("div", "hol-warn", `⚠ Aquest dia és festiu: ${holDay}`));
+    const used = slots.filter((s) => clean[s.id] > 0).sort((a, b) => a.y.localeCompare(b.y));
+    if (used.length) {
+      const from = el("div", "from");
+      from.append(el("span", "from-label", "Es descomptarà de:"));
+      const ch = el("div", "chips num");
+      used.forEach((s) => { const c = el("span", "chip", `${s.b.name} ${s.y}: ${fmt(clean[s.id])} ${unitWord(s.b, clean[s.id])}`); bagStyle(c, s.b.k); ch.append(c); });
+      from.append(ch);
+      box.append(from);
+    }
+
+    const errs = [];
+    if (bad.length) errs.push(`Revisa ${bad.map(slotLabel).join(", ")}: ha de ser un número.`);
+    if (dur !== "hores" && miss < -1e-9) {
+      errs.push(`⚠ N'has posat ${fmt(-miss)} hores de més. Un ${dur === "mig" ? "mig dia" : "dia sencer"} són ${fmt(NEED[dur])} hores: treu-ne fins que quadri.`);
+    }
+    for (const s of slots) {
+      if (!(clean[s.id] > 0)) continue;
+      const q = slotLeft(s, clean);
+      if (q < -1e-9) errs.push(`⚠ No tens prou ${slotLabel(s)}: et passaries ${fmt(-q)} ${unitWord(s.b, -q)}. Treu-ne una mica o toca un altre saldo.`);
+    }
+    $("errors").hidden = errs.length === 0;
+    $("errors").replaceChildren(...errs.map((x) => el("div", null, x)));
+    const any = slots.some((s) => clean[s.id] > 0);
+    $("saveBtn").disabled = errs.length > 0 || !any || !$("fDate").value;
+  }
+  function today() { return new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
+  function resetForm() {
+    editingId = null;
+    vals = {}; picked = new Set(); adjustOpen = new Set();
+    $("noteField").hidden = true; $("noteBtn").hidden = false;
+    $("formTitle").textContent = "Apunta un dia de festa";
+    $("formSub").textContent = "Omple les tres preguntes i desa.";
+    $("saveBtn").textContent = "Desa aquest dia";
+    $("cancelEdit").hidden = true;
+    $("fDate").value = today();
+    $("durSencer").checked = true;
+    $("tornMati").checked = true;
+    $("fNotes").value = "";
+    buildSources();
+    updateForm();
+  }
+  function startEdit(e) {
+    editingId = e.id;
+    $("formTitle").textContent = "Canvia aquest dia";
+    $("formSub").textContent = "Fes els canvis i desa.";
+    $("saveBtn").textContent = "Desa els canvis";
+    $("cancelEdit").hidden = false;
+    $("fDate").value = e.date || "";
+    $({ mig: "durMig", sencer: "durSencer", hores: "durHores" }[e.durada] || "durSencer").checked = true;
+    $(e.torn === "tarda" ? "tornTarda" : "tornMati").checked = true;
+    vals = {}; picked = new Set(); adjustOpen = new Set();
+    buildSources();
+    for (const s of slots) { const v = amountOf(e, s.y, s.b.k); if (v > 0) { vals[s.id] = fmt(v); picked.add(s.id); } }
+    renderPicked();
+    $("fNotes").value = e.notes || "";
+    $("noteField").hidden = !e.notes; $("noteBtn").hidden = !!e.notes;
+    updateForm();
+    showTab("apuntar");
+  }
+  function saveEntry(ev) {
+    ev.preventDefault();
+    updateForm();
+    const { clean } = readSlots();
+    if ($("saveBtn").disabled) {
+      if (!$("fDate").value) toast("Tria quin dia.", true);
+      else if (!slots.some((s) => clean[s.id] > 0)) toast("Toca d'on treus el temps.", true);
+      return;
+    }
+    const data = { date: $("fDate").value, durada: durValue(), notes: $("fNotes").value.trim(), any: year };
+    if (data.durada === "mig") data.torn = tornValue();
+    for (const b of BAGS) data[b.k] = 0;
+    const extra = {};
+    for (const s of slots) {
+      const v = clean[s.id] > 0 ? Math.round(clean[s.id] * 100) / 100 : 0;
+      if (s.y === year) data[s.b.k] = v;
+      else if (v > 0) { extra[s.y] = extra[s.y] || {}; extra[s.y][s.b.k] = v; }
+    }
+    if (Object.keys(extra).length) data.extra = extra;
+    if (editingId) {
+      const i = allEntries.findIndex((x) => x.id === editingId);
+      data.createdAt = i >= 0 ? allEntries[i].createdAt : Date.now();
+      if (i >= 0) allEntries[i] = Object.assign({ id: editingId }, data);
+      toast("Canvis desats ✔");
+    } else {
+      data.createdAt = Date.now();
+      allEntries.push(Object.assign({ id: "d" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6) }, data));
+      toast("Dia desat ✔");
+    }
+    sync();
+    persist();
+    const savedId = editingId || allEntries[allEntries.length - 1].id;
+    const touched = BAGS.filter((b) => yearsOf(data).some((y) => amountOf(Object.assign({ any: year }, data), y, b.k) > 0)).map((b) => b.k);
+    resetForm();
+    renderAll();
+    const li = $("entry_" + savedId); if (li) li.classList.add("just-saved");
+    document.querySelectorAll(".bcard").forEach((c, i) => { const b = BAGS.filter((x) => c.style.getPropertyValue("--bag").includes(x.k))[0]; if (b && touched.includes(b.k)) c.classList.add("just-saved"); });
+  }
+
+  /* ---------- Step 3: log ---------- */
+  // Upcoming days first (closest first), then past days (most recent first).
+  // Each day: a calendar-style date block, the duration, one row per balance used.
+  function entryCard(e) {
+    const li = el("li", "entry dcard"); li.id = "entry_" + e.id;
+    const miss = missing(e);
+    if (miss != null && miss > 1e-9) li.classList.add("short");
+    const d = e.date ? new Date(e.date + "T12:00:00") : null;
+
+    const dateBox = el("div", "dbox");
+    dateBox.append(
+      el("span", "dbox-m", d ? d.toLocaleDateString("ca-ES", { month: "short" }).replace(".", "") : "—"),
+      el("span", "dbox-d num", d ? String(d.getDate()) : "?"),
+      el("span", "dbox-y num", d ? String(d.getFullYear()) : "")
+    );
+
+    const body = el("div", "dbody");
+    const head = el("div", "dhead");
+    const wd = d ? d.toLocaleDateString("ca-ES", { weekday: "long" }) : "Sense data";
+    head.append(el("b", "dwd", wd.charAt(0).toUpperCase() + wd.slice(1)), el("span", "pill", durLabel(e)));
+    const hol = d ? holidayOf(e.date) : null;
+    body.append(head);
+    if (hol) body.append(el("div", "dhol", `Festiu: ${hol}`));
+
+    const rows = el("div", "drows num");
+    for (const y of yearsOf(e).slice().sort()) {
+      for (const b of BAGS) {
+        const v = amountOf(e, y, b.k);
+        if (v > 0) {
+          const r = el("div", "drow"); bagStyle(r, b.k);
+          const nm = el("span", "drow-n"); nm.append(el("i", "dot"), document.createTextNode(`${shortName[b.k]} `), el("em", "tile-y", y));
+          r.append(nm, el("span", "drow-v", `${fmt(v)} ${b.unit === "dies" ? unitWord(b, v) : "h"}`));
+          rows.append(r);
+        }
+      }
+    }
+    body.append(rows);
+    if (miss != null && miss > 1e-9) body.append(el("div", "badge-bad", `Falten ${fmt(miss)} hores`));
+    else if (miss != null && miss < -1e-9) body.append(el("div", "badge-over", `${fmt(-miss)} hores de més`));
+    if (e.notes) body.append(el("div", "notes", e.notes));
+
+    const ra = el("div", "row-actions dacts");
+    const mail = el("button", "btn small mail"); mail.type = "button"; mail.append(icon("mail"), document.createTextNode(" Demana"));
+    mail.addEventListener("click", () => openMail(e));
+    const ed = el("button", "btn small"); ed.type = "button"; ed.append(icon("pencil"), document.createTextNode(" Canvia"));
+    ed.addEventListener("click", () => startEdit(e));
+    const del = el("button", "btn small danger", "Esborra"); del.type = "button";
+    del.addEventListener("click", () => {
+      if (del.dataset.armed !== "1") {
+        del.dataset.armed = "1"; del.textContent = "Segur? Toca un altre cop";
+        setTimeout(() => { if (del.isConnected) { del.dataset.armed = ""; del.textContent = "Esborra"; } }, 4000);
+        return;
+      }
+      allEntries = allEntries.filter((x) => x.id !== e.id);
+      sync(); persist(); resetForm(); renderAll();
+      toast("Dia esborrat");
+    });
+    ra.append(mail, ed, del);
+
+    li.append(dateBox, body, ra);
+    return li;
+  }
+  function renderList() {
+    const ul = $("list");
+    const todayIso = today();
+    const next = allEntries.filter((e) => (e.date || "") >= todayIso).sort((a, b) => (a.date || "").localeCompare(b.date || "") || num(a.createdAt) - num(b.createdAt));
+    const past = allEntries.filter((e) => (e.date || "") < todayIso).sort((a, b) => (b.date || "").localeCompare(a.date || "") || num(b.createdAt) - num(a.createdAt));
+    const total = next.length + past.length;
+    $("count").textContent = total ? `${next.length} ${next.length === 1 ? "dia pròxim" : "dies pròxims"} · ${past.length} ${past.length === 1 ? "dia passat" : "dies passats"}` : "Tots els dies que has demanat.";
+    if (!total) { ul.replaceChildren(el("li", "empty", "Encara no has demanat cap dia. Quan en desis un, sortirà aquí.")); return; }
+    const items = [];
+    if (next.length) { items.push(el("li", "dsec", "Pròxims dies")); next.forEach((e) => items.push(entryCard(e))); }
+    if (past.length) { items.push(el("li", "dsec past", "Dies passats")); past.forEach((e) => items.push(entryCard(e))); }
+    ul.replaceChildren(...items);
+  }
+
+  /* ---------- Backup ---------- */
+  function stamp() { return new Date().toISOString().slice(0, 10); }
+  function download(name, text, type) {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type }));
+    a.download = name; document.body.append(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  }
+  $("exportJson").addEventListener("click", () => {
+    download(`vacances-i-hores-${stamp()}.json`, JSON.stringify({ app: "vacances-i-hores", version: 2, disp: allDisp, dies: allEntries, year }, null, 2), "application/json");
+    toast("Còpia descarregada ✔");
+  });
+  $("exportCsv").addEventListener("click", () => {
+    const q = (v) => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`;
+    const n = (v) => fmt(num(v));
+    const rows = [["Any", "Data", "Durada", "Vacances (dies)", "AP (h)", "CF (h)", "Formació (h)", "Hores extres (h)", "D'altres anys", "Hores cobertes", "Falten (h)", "Notes"]];
+    const extraText = (e) => Object.keys(e.extra || {}).map((y) => BAGS.filter((b) => amountOf(e, y, b.k) > 0).map((b) => `${b.name} ${y}: ${fmt(amountOf(e, y, b.k))}`).join(", ")).filter(Boolean).join(", ");
+    allEntries.slice().sort((a, b) => String(a.any).localeCompare(String(b.any)) || (a.date || "").localeCompare(b.date || "")).forEach((e) => {
+      const m = missing(e);
+      rows.push([e.any, e.date, durLabel(e), n(e.vac), n(e.ap), n(e.cf), n(e.form), n(e.hex), extraText(e), fmt(covered(e)), m == null ? "" : fmt(m), e.notes || ""]);
+    });
+    rows.push([]); rows.push(["Any", "Saldo", "Tenia", "Gastat", "Queda"]);
+    for (const y of yearList()) {
+      const d = allDisp[y] || {};
+      const s = spentFor(y, null);
+      BAGS.forEach((b) => {
+        const has = typeof d[b.k] === "number";
+        rows.push([y, b.name + (b.unit === "dies" ? " (dies)" : " (h)"), has ? fmt(d[b.k]) : "", fmt(s[b.k]), has ? fmt(d[b.k] - s[b.k]) : ""]);
+      });
+    }
+    download(`vacances-i-hores-${stamp()}.csv`, "﻿" + rows.map((r) => r.map(q).join(";")).join("\r\n"), "text/csv;charset=utf-8");
+    toast("Fitxer per a Excel descarregat ✔");
+  });
+  $("importBtn").addEventListener("click", () => $("importFile").click());
+  $("importFile").addEventListener("change", () => {
+    const f = $("importFile").files && $("importFile").files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const data = JSON.parse(r.result);
+        if (!data || typeof data.disp !== "object" || !Array.isArray(data.dies)) throw new Error("format");
+        const nn = normalize({ version: data.version, disp: data.disp || {}, dies: data.dies.filter((x) => x && typeof x === "object").map((x, i) => Object.assign({ id: x.id || ("imp" + i + Date.now().toString(36)) }, x)), year: data.year });
+        allDisp = nn.disp; allEntries = nn.dies; year = nn.year;
+        sync(); persist(); resetForm(); renderAll();
+        toast(`Còpia carregada: ${allEntries.length} ${allEntries.length === 1 ? "dia" : "dies"} ✔`);
+      } catch (e) {
+        toast("Aquest fitxer no és una còpia d'aquesta pàgina. Tria el .json de «Descarrega una còpia».", true);
+      }
+      $("importFile").value = "";
+    };
+    r.readAsText(f);
+  });
+  $("resetAll").addEventListener("click", () => { $("resetConfirm").hidden = false; $("resetNo").focus(); });
+  $("resetNo").addEventListener("click", () => { $("resetConfirm").hidden = true; });
+  $("resetYes").addEventListener("click", () => {
+    allDisp[year] = {};
+    allEntries = allEntries.filter((x) => String(x.any) !== year).map((x) => {
+      if (!x.extra || !x.extra[year]) return x;
+      const c = Object.assign({}, x, { extra: Object.assign({}, x.extra) });
+      delete c.extra[year];
+      if (!Object.keys(c.extra).length) delete c.extra;
+      return c;
+    });
+    sync(); persist();
+    $("resetConfirm").hidden = true; $("haveForm").hidden = true;
+    resetForm(); renderAll();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    toast(`Any ${year} esborrat. Torna a posar el que tens.`);
+  });
+
+  /* ---------- Email request ---------- */
+  const DEFAULT_MAIL = "jusrrhhlled.dj@gencat.cat";
+  const CFG_KEY = KEY + "-correu";
+  let cfg = { nom: "", cognoms: "", lloc: "", corp: "", mail: DEFAULT_MAIL };
+  try { const raw = localStorage.getItem(CFG_KEY); if (raw) cfg = Object.assign(cfg, JSON.parse(raw)); } catch (e) { /* keep defaults */ }
+  function saveCfg() { try { localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); } catch (e) { /* not saved */ } }
+  const profileOk = () => !!(cfg.nom && cfg.cognoms && cfg.lloc && cfg.corp);
+  // The three places that edit the profile: the top box, the settings and the email window.
+  const PROFILE = {
+    nom: ["pNom", "cfgNom", "mNom"],
+    cognoms: ["pCognoms", "cfgCognoms", "mCognoms"],
+    lloc: ["pLloc", "cfgLloc", "mLloc"],
+    corp: ["pCorp", "cfgCorp", "mCorp"]
+  };
+  function fillProfileInputs() {
+    for (const k of Object.keys(PROFILE)) PROFILE[k].forEach((id) => { if (document.activeElement !== $(id)) $(id).value = cfg[k] || ""; });
+    $("cfgMail").value = cfg.mail || DEFAULT_MAIL;
+    $("profileBox").hidden = profileOk();
+  }
+  fillProfileInputs();
+  $("pSave").addEventListener("click", () => {
+    cfg.nom = $("pNom").value.trim(); cfg.cognoms = $("pCognoms").value.trim(); cfg.lloc = $("pLloc").value.trim(); cfg.corp = $("pCorp").value.trim();
+    if (!profileOk()) { toast("Omple el nom, els cognoms, la guàrdia o lloc de treball i el correu corporatiu.", true); return; }
+    saveCfg(); fillProfileInputs(); toast("Dades desades ✔");
+  });
+  ["cfgNom", "cfgCognoms", "cfgLloc", "cfgCorp"].forEach((id) => $(id).addEventListener("change", () => {
+    cfg.nom = $("cfgNom").value.trim(); cfg.cognoms = $("cfgCognoms").value.trim(); cfg.lloc = $("cfgLloc").value.trim(); cfg.corp = $("cfgCorp").value.trim();
+    saveCfg(); fillProfileInputs(); toast("Dades desades ✔");
+  }));
+  $("cfgMail").addEventListener("change", () => { cfg.mail = $("cfgMail").value.trim() || DEFAULT_MAIL; saveCfg(); fillProfileInputs(); toast("Correu desat ✔"); });
+
+  const MOTIU = { vac: "Vacances", ap: "Assumptes personals", cf: "Compensació de festius", form: "Formació", hex: "Hores extres" };
+  function joinCa(list) { return list.length <= 1 ? list.join("") : list.slice(0, -1).join(", ") + " i " + list[list.length - 1]; }
+  const lower1 = (s) => s.charAt(0).toLowerCase() + s.slice(1);
+  function buildMail(e) {
+    const d = e.date ? new Date(e.date + "T12:00:00") : null;
+    const dLong = d ? d.toLocaleDateString("ca-ES", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "(data)";
+    const dShort = d ? d.toLocaleDateString("ca-ES", { day: "2-digit", month: "2-digit", year: "numeric" }) : "[data]";
+    const motius = BAGS.filter((b) => yearsOf(e).some((y) => amountOf(e, y, b.k) > 0)).map((b) => MOTIU[b.k]);
+    const motiu = motius.length ? motius[0] + (motius.length > 1 ? ", " + joinCa(motius.slice(1).map(lower1)).replace(/^/, "") : "") : "Permís";
+    const motiuText = motius.length > 1 ? motius[0] + " i " + joinCa(motius.slice(1).map(lower1)) : motiu;
+    const durText = e.durada === "sencer" ? "la jornada sencera"
+      : e.durada === "mig" ? `mitja jornada (${e.torn === "tarda" ? "tarda" : "matí"})`
+      : `${fmt(covered(e))} hores`;
+    const lines = [];
+    for (const y of yearsOf(e).slice().sort()) {
+      for (const b of BAGS) {
+        const v = amountOf(e, y, b.k);
+        if (v > 0) lines.push(`- ${b.name} ${y}: ${fmt(v)} ${unitWord(b, v)}`);
+      }
+    }
+    // Format requested by HR: Cognoms, Nom. Guàrdia/lloc de treball. Motiu. Data d'inici.
+    const subject = `${cfg.cognoms || "[Cognoms]"}, ${cfg.nom || "[Nom]"}. ${cfg.lloc || "[Guàrdia/lloc de treball]"}. ${motiuText}. ${dShort}.`;
+    const signName = [cfg.nom, cfg.cognoms].filter(Boolean).join(" ") || "[Nom i cognoms]";
+    const body = [
+      "Bon dia,",
+      "",
+      `Us sol·licito gaudir del ${dLong}, ${durText}, amb càrrec a:`,
+      "",
+      ...lines,
+      ...(e.notes ? ["", `Observacions: ${e.notes}`] : []),
+      "",
+      "Moltes gràcies.",
+      "",
+      "Salutacions cordials,",
+      signName,
+      cfg.lloc || "[Guàrdia/lloc de treball]",
+      ...(cfg.corp ? [cfg.corp] : [])
+    ].join("\n");
+    return { subject, body };
+  }
+  const ccAddr = () => ($("mCc").checked && cfg.corp ? cfg.corp : "");
+  function mailHref() {
+    const to = $("mTo").value.trim();
+    const cc = ccAddr();
+    return `mailto:${to}?${cc ? "cc=" + encodeURIComponent(cc) + "&" : ""}subject=${encodeURIComponent($("mSubj").value)}&body=${encodeURIComponent($("mBody").value)}`;
+  }
+  // Outlook on the web (Microsoft 365): sends from the account signed in there, usually the work one.
+  function outlookHref() {
+    const q = new URLSearchParams({ to: $("mTo").value.trim(), subject: $("mSubj").value, body: $("mBody").value });
+    const cc = ccAddr(); if (cc) q.set("cc", cc);
+    return "https://outlook.office.com/mail/deeplink/compose?" + q.toString().replace(/\+/g, "%20");
+  }
+  const isPhone = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+  // Outlook app on the phone: opens a new message already filled in.
+  function outlookAppHref() {
+    const q = [`to=${encodeURIComponent($("mTo").value.trim())}`];
+    const cc = ccAddr(); if (cc) q.push(`cc=${encodeURIComponent(cc)}`);
+    q.push(`subject=${encodeURIComponent($("mSubj").value)}`, `body=${encodeURIComponent($("mBody").value)}`);
+    return "ms-outlook://compose?" + q.join("&");
+  }
+  function setOutlookLabel() {
+    const a = $("mOutlook");
+    const txt = isPhone ? " Obre el correu (Outlook)" : " Obre a Outlook (correu corporatiu)";
+    const svg = a.querySelector("svg");
+    a.replaceChildren(...(svg ? [svg] : []), document.createTextNode(txt));
+  }
+  function refreshMailLink() {
+    setOutlookLabel();
+    $("mSend").href = mailHref();
+    if (isPhone) {
+      $("mOutlook").href = mailHref();
+      $("mOutlook").removeAttribute("target");
+      $("mOutlookWeb").href = outlookHref();
+      $("mOutlookWeb").hidden = false;
+      $("mSend").hidden = true;
+    } else {
+      $("mOutlook").href = outlookHref();
+      $("mOutlook").setAttribute("target", "_blank");
+      $("mOutlookWeb").hidden = true;
+      $("mSend").hidden = false;
+    }
+    $("mCcAddr").textContent = cfg.corp ? `(${cfg.corp})` : "(posa'l a les teves dades)";
+  }
+  let mailEntry = null;
+  function fillMail() {
+    const m = buildMail(mailEntry);
+    $("mSubj").value = m.subject;
+    $("mBody").value = m.body;
+    refreshMailLink();
+  }
+  function openMail(e) {
+    mailEntry = e;
+    $("mTo").value = cfg.mail || DEFAULT_MAIL;
+    $("mProfile").hidden = profileOk();
+    fillProfileInputs();
+    fillMail();
+    const dlg = $("mailDlg");
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute("open", "");
+  }
+  // Typing the missing details inside the email window saves them and redoes subject and signature.
+  ["mNom", "mCognoms", "mLloc", "mCorp"].forEach((id) => $(id).addEventListener("input", () => {
+    cfg.nom = $("mNom").value.trim(); cfg.cognoms = $("mCognoms").value.trim(); cfg.lloc = $("mLloc").value.trim(); cfg.corp = $("mCorp").value.trim();
+    saveCfg(); fillProfileInputs();
+    if (mailEntry) fillMail();
+  }));
+  ["mTo", "mSubj", "mBody"].forEach((id) => $(id).addEventListener("input", refreshMailLink));
+  $("mCc").addEventListener("change", refreshMailLink);
+  ["mSend", "mOutlook", "mOutlookWeb"].forEach((id) => $(id).addEventListener("click", (ev) => {
+    if (!profileOk()) { ev.preventDefault(); $("mProfile").hidden = false; toast("Primer omple les teves dades: nom, cognoms, guàrdia o lloc de treball i correu corporatiu.", true); $("mNom").focus(); }
+  }));
+  $("mClose").addEventListener("click", () => $("mailDlg").close ? $("mailDlg").close() : $("mailDlg").removeAttribute("open"));
+  $("mCopy").addEventListener("click", async () => {
+    const text = `Per a: ${$("mTo").value}\nAssumpte: ${$("mSubj").value}\n\n${$("mBody").value}`;
+    try { await navigator.clipboard.writeText(text); toast("Text copiat ✔"); }
+    catch (err) { $("mBody").focus(); $("mBody").select(); toast("Selecciona el text i copia'l amb Ctrl+C o mantenint premut.", true); }
+  });
+
+  /* ---------- Install as an app ---------- */
+  let installEvt = null;
+  window.addEventListener("beforeinstallprompt", (ev) => { ev.preventDefault(); installEvt = ev; $("installBox").hidden = false; });
+  $("installBtn").addEventListener("click", async () => {
+    if (!installEvt) return;
+    installEvt.prompt();
+    try { await installEvt.userChoice; } catch (e) { /* ignore */ }
+    installEvt = null; $("installBox").hidden = true;
+  });
+  window.addEventListener("appinstalled", () => { $("installBox").hidden = true; toast("App instal·lada ✔"); });
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) {
+    // No app worker any more: remove any old one and its saved copies (data in localStorage is kept).
+    navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
+    if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
+    // Is there a newer published version than the one on screen?
+    const BUILD = "20261121222927";
+    const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
+      .catch(() => { /* offline: keep the saved version */ });
+    setTimeout(checkVersion, 1200);
+    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") checkVersion(); });
+    $("updateBtn").addEventListener("click", async () => {
+      $("updateBtn").disabled = true; $("updateBtn").textContent = "Actualitzant…";
+      try {
+        const fresh = await fetch("./?fresh=" + Date.now(), { cache: "no-store" });
+        if (fresh.ok && window.caches) {
+          const names = await caches.keys();
+          await Promise.all(names.map(async (n) => (await caches.open(n)).put("./", fresh.clone())));
+        }
+      } catch (e) { /* reload anyway */ }
+      location.reload();
+    });
+  } else {
+    $("updateBtn").addEventListener("click", () => location.reload());
+  }
+
+  /* ---------- Start ---------- */
+  /* ---------- Official holidays ---------- */
+  // Catalonia: Ordre EMT/66/2025 (2026) and Ordre EMT/52/2026 (2027).
+  // Local, Sant Joan de Vilatorrada (CP Lledoners): Ordre EMT/208/2025 (2026). 2027 local days not published yet.
+  const LOCAL = "Festa local (Sant Joan de Vilatorrada)";
+  const HOLIDAYS = {
+    "2026-01-01": "Cap d'Any", "2026-01-06": "Reis", "2026-02-21": LOCAL, "2026-04-03": "Divendres Sant",
+    "2026-04-06": "Dilluns de Pasqua", "2026-05-01": "Festa del Treball", "2026-06-24": "Sant Joan", "2026-06-25": LOCAL,
+    "2026-08-15": "L'Assumpció", "2026-09-11": "Diada Nacional de Catalunya", "2026-10-12": "Festa Nacional d'Espanya",
+    "2026-12-08": "La Immaculada", "2026-12-25": "Nadal", "2026-12-26": "Sant Esteve",
+    "2027-01-01": "Cap d'Any", "2027-01-06": "Reis", "2027-03-26": "Divendres Sant", "2027-03-29": "Dilluns de Pasqua",
+    "2027-05-01": "Festa del Treball", "2027-06-24": "Sant Joan", "2027-09-11": "Diada Nacional de Catalunya",
+    "2027-10-12": "Festa Nacional d'Espanya", "2027-11-01": "Tots Sants", "2027-12-06": "Dia de la Constitució",
+    "2027-12-08": "La Immaculada", "2027-12-25": "Nadal"
+  };
+  const holidayOf = (isoDate) => HOLIDAYS[isoDate] || null;
+
+  /* ---------- Calendar ---------- */
+  let calMonth = (() => { const d = new Date(); return new Date(d.getFullYear(), d.getMonth(), 1); })();
+  const iso = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  function renderCalendar() {
+    const grid = $("calGrid");
+    const mName = calMonth.toLocaleDateString("ca-ES", { month: "long", year: "numeric" });
+    $("calMonth").textContent = mName.charAt(0).toUpperCase() + mName.slice(1);
+    const byDate = {};
+    allEntries.forEach((e) => { if (e.date) (byDate[e.date] = byDate[e.date] || []).push(e); });
+    const cells = ["dl", "dt", "dc", "dj", "dv", "ds", "dg"].map((d) => el("div", "cal-dow", d));
+    const first = new Date(calMonth);
+    const offset = (first.getDay() + 6) % 7;
+    const days = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+    const todayIso = today();
+    for (let i = 0; i < offset; i++) cells.push(el("div", "cal-day other"));
+    for (let n = 1; n <= days; n++) {
+      const d = new Date(first.getFullYear(), first.getMonth(), n);
+      const key = iso(d);
+      const list = byDate[key] || [];
+      const b = el("button", "cal-day"); b.type = "button";
+      if (d.getDay() === 0 || d.getDay() === 6) b.classList.add("wkend");
+      if (key === todayIso) b.classList.add("today");
+      b.append(el("span", "num", String(n)));
+      const label = [d.toLocaleDateString("ca-ES", { weekday: "long", day: "numeric", month: "long" })];
+      const hol = holidayOf(key);
+      if (hol) { b.classList.add("hol"); label.push(`Festiu: ${hol}`); }
+      if (list.length) {
+        b.classList.add("has");
+        const t = { vac: 0, ap: 0, cf: 0, form: 0, hex: 0 };
+        list.forEach((e) => { const x = totals(e); BAGS.forEach((bg) => { t[bg.k] += x[bg.k]; }); });
+        const bars = el("span", "bars");
+        BAGS.forEach((bg) => { if (t[bg.k] > 0) { const i = el("i"); bagStyle(i, bg.k); bars.append(i); label.push(`${bg.name}: ${fmt(t[bg.k])} ${unitWord(bg, t[bg.k])}`); } });
+        b.append(bars);
+        const main = BAGS.filter((bg) => t[bg.k] > 0).sort((x, y) => (y.k === "vac" ? hoursFromDays(t.vac) : t[y.k]) - (x.k === "vac" ? hoursFromDays(t.vac) : t[x.k]))[0];
+        if (main) bagStyle(b, main.k);
+        const half = list.find((e) => e.durada === "mig");
+        if (half) b.append(el("span", "tag", half.torn === "tarda" ? "T" : "M"));
+        else if (list.some((e) => e.durada === "hores")) b.append(el("span", "tag", "h"));
+        b.addEventListener("click", () => {
+          showTab("dies");
+          const li = $("entry_" + list[0].id);
+          if (li) { setTimeout(() => li.scrollIntoView({ behavior: "smooth", block: "center" }), 30); li.classList.add("flash"); setTimeout(() => li.classList.remove("flash"), 1800); }
+        });
+      } else {
+        b.addEventListener("click", () => {
+          if (!editingId) resetForm();
+          $("fDate").value = key; updateForm();
+          showTab("apuntar");
+          if (hol) { setTimeout(() => toast(`Compte: el ${d.getDate()} és festiu (${hol})`, true), 400); return; }
+          toast(`Data posada: ${d.toLocaleDateString("ca-ES", { day: "numeric", month: "long" })}`);
+        });
+      }
+      b.setAttribute("aria-label", label.join(". "));
+      b.title = label.join("\n");
+      cells.push(b);
+    }
+    grid.replaceChildren(...cells);
+    const monthHols = Object.keys(HOLIDAYS).filter((k) => k.startsWith(`${first.getFullYear()}-${String(first.getMonth() + 1).padStart(2, "0")}-`)).sort();
+    const hl = $("calHols");
+    if (monthHols.length) {
+      hl.hidden = false;
+      hl.replaceChildren(el("b", null, "Festius d'aquest mes"), ...monthHols.map((k) => {
+        const dd = new Date(k + "T12:00:00");
+        const row = el("div", "hol-row");
+        row.append(el("span", "hol-d", dd.toLocaleDateString("ca-ES", { weekday: "short", day: "numeric" })), el("span", null, HOLIDAYS[k]));
+        return row;
+      }));
+    } else {
+      const y = first.getFullYear();
+      const known = Object.keys(HOLIDAYS).some((k) => k.startsWith(y + "-"));
+      hl.hidden = known;
+      hl.replaceChildren(el("span", "hint", `Encara no hi ha el calendari oficial de festius del ${y}.`));
+    }
+    $("calLegend").replaceChildren(...BAGS.map((bg) => { const s = el("span"); const dot = el("i", "dot"); bagStyle(dot, bg.k); s.append(dot, document.createTextNode(shortName[bg.k])); return s; }),
+      el("span", null, "M = matí · T = tarda"),
+      (() => { const s = el("span"); s.append(el("i", "hol-key"), document.createTextNode("Festiu oficial")); return s; })());
+  }
+  $("calPrev").addEventListener("click", () => { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() - 1, 1); renderCalendar(); });
+  $("calNext").addEventListener("click", () => { calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 1); renderCalendar(); });
+  $("calToday").addEventListener("click", () => { const d = new Date(); calMonth = new Date(d.getFullYear(), d.getMonth(), 1); renderCalendar(); });
+
+  function renderAll() { renderYears(); renderBalance(); renderList(); renderCalendar(); updateForm(); }
+  buildHaveFields();
+  document.querySelectorAll('input[name="dur"]').forEach((r) => r.addEventListener("change", updateForm));
+  $("fDate").addEventListener("input", updateForm);
+  $("entryForm").addEventListener("submit", saveEntry);
+  $("cancelEdit").addEventListener("click", resetForm);
+  $("noteBtn").addEventListener("click", () => { $("noteBtn").hidden = true; $("noteField").hidden = false; $("fNotes").focus(); });
+  $("haveBtn").addEventListener("click", openHave);
+  $("welcomeBtn").addEventListener("click", () => { openHave(); $("haveForm").scrollIntoView({ behavior: "smooth", block: "center" }); });
+  $("haveCancel").addEventListener("click", () => { $("haveForm").hidden = true; });
+  $("haveForm").addEventListener("submit", saveHave);
+  /* ---------- Tabs ---------- */
+  const TABS = ["inici", "apuntar", "calendari", "dies"];
+  const tabParts = [];
+  const assign = (node, tabs) => { if (node) tabParts.push({ node, tabs }); };
+  assign($("profileBox"), ["inici"]);
+  assign($("welcome"), ["inici"]);
+  assign($("h1s").closest("section"), ["inici"]);
+  assign($("formSec"), ["apuntar"]);
+  assign(document.querySelector("section.cal"), ["calendari"]);
+  assign($("h3s").closest("section"), ["dies"]);
+  let currentTab = "inici";
+  function showTab(name, fromHash) {
+    if (!TABS.includes(name)) name = "inici";
+    const changed = name !== currentTab;
+    currentTab = name;
+    document.body.dataset.tab = name;
+    tabParts.forEach(({ node, tabs }) => node.classList.toggle("off-tab", !tabs.includes(name)));
+    document.querySelectorAll(".tabbar .tab").forEach((b) => {
+      if (b.dataset.tab === name) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current");
+    });
+    $("fab").hidden = name === "apuntar";
+    if (!fromHash && location.hash !== "#" + name) { try { history.replaceState(null, "", "#" + name); } catch (e) { /* ignore */ } }
+    if (changed) window.scrollTo({ top: 0 });
+  }
+  document.querySelectorAll(".tabbar .tab").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
+  $("fab").addEventListener("click", () => { resetForm(); showTab("apuntar"); });
+  window.addEventListener("hashchange", () => showTab(location.hash.slice(1), true));
+
+  const menuPanel = el("div", "menu-panel"); menuPanel.id = "menuPanel"; menuPanel.hidden = true;
+  const menuHead = el("div", "menu-head");
+  const menuClose = el("button", "btn small", "Tanca"); menuClose.type = "button";
+  menuHead.append(el("b", null, "Menú"), menuClose);
+  menuPanel.append(menuHead, $("mailSettings"));
+  document.querySelectorAll("main > details").forEach((d) => menuPanel.append(d));
+  document.querySelector("header").append(menuPanel);
+  function setMenu(open) {
+    menuPanel.hidden = !open;
+    $("menuBtn").setAttribute("aria-expanded", open ? "true" : "false");
+  }
+  $("menuBtn").addEventListener("click", (ev) => { ev.stopPropagation(); setMenu(menuPanel.hidden); });
+  menuClose.addEventListener("click", () => setMenu(false));
+  document.addEventListener("click", (ev) => { if (!menuPanel.hidden && !menuPanel.contains(ev.target) && ev.target !== $("menuBtn")) setMenu(false); });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") setMenu(false); });
+  document.querySelectorAll(".tabbar .tab, #fab").forEach((b) => b.addEventListener("click", () => setMenu(false)));
+  $("haveForm").prepend($("years"));
+  const haveBtnBox = $("haveBtn").parentElement;
+  $("h1s").closest("section").querySelector(".step-head").after(haveBtnBox, $("haveForm"));
+  $("haveBtn").className = "btn primary big";
+  $("haveForm").append($("resetAll").parentElement, $("resetConfirm"));
+  loadState();
+  resetForm();
+  renderAll();
+  currentTab = "";
+  showTab(location.hash.slice(1) || "inici", true);
+})();
+</script>
+</body>
+</html>

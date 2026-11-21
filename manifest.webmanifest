@@ -1,0 +1,17 @@
+{
+  "name": "Vacances i hores",
+  "short_name": "Vacances",
+  "description": "Apunta els teus dies de festa i mira quant et queda de cada saldo.",
+  "lang": "ca",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#eef2f1",
+  "theme_color": "#0e6e63",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
