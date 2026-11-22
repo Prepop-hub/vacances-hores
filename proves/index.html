@@ -558,6 +558,23 @@ a.btn { text-decoration: none; display: inline-block; }
 main.slide-l { animation: slideL .22s ease-out; }
 main.slide-r { animation: slideR .22s ease-out; }
 @media (prefers-reduced-motion: reduce) { main.slide-l, main.slide-r { animation: none; } }
+/* Earned hours */
+.earn-btn { width: 100%; border-radius: 12px; border: 2px dashed var(--accent); color: var(--accent); background: transparent; font-weight: 700; padding: 9px 14px; }
+.sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 60; display: grid; align-items: end; justify-items: center; }
+.sheet { background: var(--surface); color: var(--ink); width: 100%; max-width: 520px; max-height: 92vh; overflow-y: auto; border-radius: 18px 18px 0 0; padding: 16px 16px calc(16px + env(safe-area-inset-bottom)); display: grid; gap: 12px; }
+@media (min-width: 600px) { .sheet-bg { align-items: center; } .sheet { border-radius: 18px; } }
+.sheet-h { display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; }
+.g-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.g-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); border-radius: 999px; padding: 7px 12px; font: inherit; font-weight: 600; cursor: pointer; }
+.g-chip[aria-pressed="true"] { border: 2px solid var(--bag, var(--accent)); background: var(--bagbg, var(--surface)); font-weight: 800; }
+.list .dsec.earned { color: var(--hex, var(--accent)); }
+.gcard { display: grid !important; gap: 6px; border-left: 5px solid var(--bag) !important; background: var(--bagbg) !important; }
+.g-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.g-amt { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 1.05rem; }
+.g-date { color: var(--muted); font-size: 0.9rem; }
+.gcard .row-actions { justify-content: flex-end; }
+.yearned { font-size: 0.82rem; color: var(--muted); padding: 4px 2px 0; }
+@media (max-width: 520px) { body[data-tab="inici"] .earn-btn { padding: 7px 12px; font-size: 0.9rem; } }
 </style>
 </head>
 <body>
@@ -839,6 +856,8 @@ main.slide-r { animation: slideR .22s ease-out; }
   // allDisp: { "2026": {vac, ap, ...}, ... }; allEntries: every day, each with `any` (the year it counts for).
   // disp / entries are the selected year's slice, refreshed by sync().
   let allDisp = {}, allEntries = [], year = String(new Date().getFullYear());
+  // allGuanys: hours you were given later, [{id, date, any, k, h, motiu, createdAt}]. They add to that year's balance.
+  let allGuanys = [];
   let disp = {}, entries = [], editingId = null;
   function sync() {
     disp = allDisp[year] || {};
@@ -847,13 +866,23 @@ main.slide-r { animation: slideR .22s ease-out; }
   function yearList() {
     const s = new Set(Object.keys(allDisp));
     allEntries.forEach((e) => s.add(String(e.any)));
+    allGuanys.forEach((g) => s.add(String(g.any)));
     const cy = new Date().getFullYear();
     s.add(String(cy)); s.add(String(cy + 1));
     s.add(year);
     return [...s].filter((y) => /^\d{4}$/.test(y)).sort();
   }
   // Accepts the old one-balance format and the per-year format.
+  function normGuanys(list) {
+    return (Array.isArray(list) ? list : []).filter((g) => g && typeof g === "object" && typeof g.h === "number" && isFinite(g.h) && g.h > 0 && ["vac", "ap", "cf", "form", "hex"].includes(g.k))
+      .map((g, i) => ({ id: g.id || ("g" + i + Date.now().toString(36)), date: g.date || "", any: String(g.any || (g.date || String(new Date().getFullYear())).slice(0, 4)), k: g.k, h: g.h, motiu: String(g.motiu || ""), createdAt: g.createdAt || Date.now() }));
+  }
   function normalize(state) {
+    const n = normalizeBase(state);
+    n.guanys = normGuanys(state && state.guanys);
+    return n;
+  }
+  function normalizeBase(state) {
     const fallback = String(new Date().getFullYear());
     if (state && state.version === 2) {
       const d = state.disp && typeof state.disp === "object" ? state.disp : {};
@@ -884,7 +913,10 @@ main.slide-r { animation: slideR .22s ease-out; }
   const hoursOf = (t) => hoursFromDays(t.vac) + t.ap + t.cf + t.form + t.hex;
   const covered = (e) => hoursOf(totals(e));
   const missing = (e) => (e.durada === "mig" || e.durada === "sencer") ? NEED[e.durada] - covered(e) : null;
-  const dispOf = (y, k) => { const d = allDisp[y]; return d && typeof d[k] === "number" && isFinite(d[k]) ? d[k] : null; };
+  const baseOf = (y, k) => { const d = allDisp[y]; return d && typeof d[k] === "number" && isFinite(d[k]) ? d[k] : null; };
+  const earnedOf = (y, k) => allGuanys.reduce((a, g) => a + (String(g.any) === y && g.k === k ? g.h : 0), 0);
+  // What you have of a balance in a year: what you wrote plus the hours given to you later.
+  const dispOf = (y, k) => { const b = baseOf(y, k), e = earnedOf(y, k); return b == null && !(e > 0) ? null : (b || 0) + e; };
   const hasDisp = (k) => dispOf(year, k) != null;
   function spentFor(y, excludeId) {
     const s = { vac: 0, ap: 0, cf: 0, form: 0, hex: 0 };
@@ -906,7 +938,7 @@ main.slide-r { animation: slideR .22s ease-out; }
 
   /* ---------- Storage ---------- */
   function persist() {
-    try { localStorage.setItem(KEY, JSON.stringify({ version: 2, disp: allDisp, dies: allEntries, year, savedAt: new Date().toISOString() })); $("storageWarn").hidden = true; }
+    try { localStorage.setItem(KEY, JSON.stringify({ version: 2, disp: allDisp, dies: allEntries, guanys: allGuanys, year, savedAt: new Date().toISOString() })); $("storageWarn").hidden = true; }
     catch (e) { $("storageWarn").hidden = false; }
   }
   function loadState() {
@@ -914,7 +946,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     try { const raw = localStorage.getItem(KEY); if (raw) state = JSON.parse(raw); } catch (e) { $("storageWarn").hidden = false; }
     if (!state || typeof state !== "object") { state = JSON.parse(JSON.stringify(START)); fresh = true; }
     const n = normalize(state);
-    allDisp = n.disp; allEntries = n.dies; year = n.year;
+    allDisp = n.disp; allEntries = n.dies; allGuanys = n.guanys; year = n.year;
     sync();
     if (fresh || state.version !== 2) persist();
   }
@@ -1033,6 +1065,8 @@ main.slide-r { animation: slideR .22s ease-out; }
       });
       tbl.append(thead, tbody);
       block.append(tbl);
+      const ex = bags.filter((b) => earnedOf(y, b.k) > 0).map((b) => `+${fmt(earnedOf(y, b.k))} h ${shortName[b.k]}`);
+      if (ex.length) block.append(el("div", "yearned", `«Tenies» inclou les hores guanyades: ${ex.join(" · ")}`));
       return block;
     }));
   }
@@ -1114,7 +1148,9 @@ main.slide-r { animation: slideR .22s ease-out; }
     }));
   }
   function openHave() {
-    for (const b of BAGS) $("have_" + b.k).value = hasDisp(b.k) ? fmt(disp[b.k]) : "";
+    for (const b of BAGS) $("have_" + b.k).value = baseOf(year, b.k) != null ? fmt(baseOf(year, b.k)) : "";
+    const ex = BAGS.filter((b) => earnedOf(year, b.k) > 0).map((b) => `${fmt(earnedOf(year, b.k))} h de ${b.name}`);
+    $("haveHint").textContent = `Escriu el total que tenies per a l'any ${year}. Deixa-ho en blanc si no en tens.` + (ex.length ? ` Les hores guanyades (${ex.join(", ")}) s'hi sumen soles: no les posis aquí.` : "");
     $("haveForm").hidden = false;
     $("have_vac").focus();
   }
@@ -1509,6 +1545,30 @@ main.slide-r { animation: slideR .22s ease-out; }
     li.append(dateBox, body, ra);
     return li;
   }
+  function earnedCard(g) {
+    const b = BAGS.find((x) => x.k === g.k) || BAGS[0];
+    const li = el("li", "entry gcard"); bagStyle(li, g.k);
+    const d = g.date ? new Date(g.date + "T12:00:00") : null;
+    const top = el("div", "g-top");
+    const amt = el("span", "g-amt num"); amt.append(el("i", "dot"), document.createTextNode(`+${fmt(g.h)} h ${b.name} `), el("em", "tile-y", g.any));
+    top.append(amt, el("span", "g-date", d ? d.toLocaleDateString("ca-ES", { day: "numeric", month: "short", year: "numeric" }) : ""));
+    li.append(top);
+    if (g.motiu) li.append(el("div", "notes", g.motiu));
+    const del = el("button", "btn small danger", "Esborra"); del.type = "button";
+    del.addEventListener("click", () => {
+      if (del.dataset.armed !== "1") {
+        del.dataset.armed = "1"; del.textContent = "Segur? Toca un altre cop";
+        setTimeout(() => { if (del.isConnected) { del.dataset.armed = ""; del.textContent = "Esborra"; } }, 4000);
+        return;
+      }
+      allGuanys = allGuanys.filter((x) => x.id !== g.id);
+      persist(); renderAll();
+      toast("Hores guanyades esborrades");
+    });
+    const ra = el("div", "row-actions"); ra.append(del);
+    li.append(ra);
+    return li;
+  }
   function renderList() {
     const ul = $("list");
     const todayIso = today();
@@ -1516,10 +1576,14 @@ main.slide-r { animation: slideR .22s ease-out; }
     const past = allEntries.filter((e) => (e.date || "") < todayIso).sort((a, b) => (b.date || "").localeCompare(a.date || "") || num(b.createdAt) - num(a.createdAt));
     const total = next.length + past.length;
     $("count").textContent = total ? `${next.length} ${next.length === 1 ? "dia pròxim" : "dies pròxims"} · ${past.length} ${past.length === 1 ? "dia passat" : "dies passats"}` : "Tots els dies que has demanat.";
-    if (!total) { ul.replaceChildren(el("li", "empty", "Encara no has demanat cap dia. Quan en desis un, sortirà aquí.")); return; }
     const items = [];
+    if (!total) items.push(el("li", "empty", "Encara no has demanat cap dia. Quan en desis un, sortirà aquí."));
     if (next.length) { items.push(el("li", "dsec", "Pròxims dies")); next.forEach((e) => items.push(entryCard(e))); }
     if (past.length) { items.push(el("li", "dsec past", "Dies passats")); past.forEach((e) => items.push(entryCard(e))); }
+    if (allGuanys.length) {
+      items.push(el("li", "dsec earned", "Hores guanyades"));
+      allGuanys.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "") || num(b.createdAt) - num(a.createdAt)).forEach((g) => items.push(earnedCard(g)));
+    }
     ul.replaceChildren(...items);
   }
 
@@ -1532,7 +1596,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   }
   $("exportJson").addEventListener("click", () => {
-    download(`vacances-i-hores-${stamp()}.json`, JSON.stringify({ app: "vacances-i-hores", version: 2, disp: allDisp, dies: allEntries, year }, null, 2), "application/json");
+    download(`vacances-i-hores-${stamp()}.json`, JSON.stringify({ app: "vacances-i-hores", version: 2, disp: allDisp, dies: allEntries, guanys: allGuanys, year }, null, 2), "application/json");
     toast("Còpia descarregada ✔");
   });
   $("exportCsv").addEventListener("click", () => {
@@ -1544,6 +1608,10 @@ main.slide-r { animation: slideR .22s ease-out; }
       const m = missing(e);
       rows.push([e.any, e.date, durLabel(e), n(e.vac), n(e.ap), n(e.cf), n(e.form), n(e.hex), extraText(e), fmt(covered(e)), m == null ? "" : fmt(m), e.notes || ""]);
     });
+    if (allGuanys.length) {
+      rows.push([]); rows.push(["Hores guanyades"]); rows.push(["Any", "Data", "Saldo", "Hores", "Motiu"]);
+      allGuanys.slice().sort((a, b) => (a.date || "").localeCompare(b.date || "")).forEach((g) => rows.push([g.any, g.date, (BAGS.find((b) => b.k === g.k) || {}).name, n(g.h), g.motiu]));
+    }
     rows.push([]); rows.push(["Any", "Saldo", "Tenia", "Gastat", "Queda"]);
     for (const y of yearList()) {
       const d = allDisp[y] || {};
@@ -1565,8 +1633,8 @@ main.slide-r { animation: slideR .22s ease-out; }
       try {
         const data = JSON.parse(r.result);
         if (!data || typeof data.disp !== "object" || !Array.isArray(data.dies)) throw new Error("format");
-        const nn = normalize({ version: data.version, disp: data.disp || {}, dies: data.dies.filter((x) => x && typeof x === "object").map((x, i) => Object.assign({ id: x.id || ("imp" + i + Date.now().toString(36)) }, x)), year: data.year });
-        allDisp = nn.disp; allEntries = nn.dies; year = nn.year;
+        const nn = normalize({ version: data.version, disp: data.disp || {}, dies: data.dies.filter((x) => x && typeof x === "object").map((x, i) => Object.assign({ id: x.id || ("imp" + i + Date.now().toString(36)) }, x)), guanys: data.guanys, year: data.year });
+        allDisp = nn.disp; allEntries = nn.dies; allGuanys = nn.guanys; year = nn.year;
         sync(); persist(); resetForm(); renderAll();
         toast(`Còpia carregada: ${allEntries.length} ${allEntries.length === 1 ? "dia" : "dies"} ✔`);
       } catch (e) {
@@ -1580,6 +1648,7 @@ main.slide-r { animation: slideR .22s ease-out; }
   $("resetNo").addEventListener("click", () => { $("resetConfirm").hidden = true; });
   $("resetYes").addEventListener("click", () => {
     allDisp[year] = {};
+    allGuanys = allGuanys.filter((g) => String(g.any) !== year);
     allEntries = allEntries.filter((x) => String(x.any) !== year).map((x) => {
       if (!x.extra || !x.extra[year]) return x;
       const c = Object.assign({}, x, { extra: Object.assign({}, x.extra) });
@@ -1757,7 +1826,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122113427";
+    const BUILD = "20261122113919";
     const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
@@ -1921,7 +1990,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     let sx = 0, sy = 0, st = 0, ok = false;
     const skip = (node) => {
       for (let n = node; n && n !== document.body; n = n.parentElement) {
-        if (n.matches && n.matches("input, textarea, select, [contenteditable], .menu-panel, .tabbar")) return true;
+        if (n.matches && n.matches("input, textarea, select, [contenteditable], .menu-panel, .tabbar, .sheet-bg")) return true;
         const cs = getComputedStyle(n);
         if ((cs.overflowX === "auto" || cs.overflowX === "scroll") && n.scrollWidth > n.clientWidth + 2) return true;
       }
@@ -1972,6 +2041,71 @@ main.slide-r { animation: slideR .22s ease-out; }
   const haveBtnBox = $("haveBtn").parentElement;
   $("h1s").closest("section").querySelector(".step-head").after(haveBtnBox, $("haveForm"));
   $("haveBtn").className = "btn primary big";
+
+  // "+ Afegeix hores guanyades": hours given to you later (overtime, holiday worked...).
+  const earnBtn = el("button", "btn earn-btn"); earnBtn.type = "button"; earnBtn.id = "earnBtn";
+  earnBtn.append(icon("plus"), document.createTextNode(" Afegeix hores guanyades"));
+  const earnBox = el("div"); earnBox.append(earnBtn);
+  haveBtnBox.after(earnBox);
+  const sheetBg = el("div", "sheet-bg"); sheetBg.hidden = true;
+  const sheet = el("form", "sheet"); sheet.setAttribute("role", "dialog"); sheet.setAttribute("aria-label", "Afegeix hores guanyades"); sheet.noValidate = true;
+  sheet.innerHTML = `
+    <div class="sheet-h"><b>Hores guanyades</b><button type="button" class="btn small" id="gClose">Tanca</button></div>
+    <p class="hint">Hores que t'han donat (hores extres, festiu treballat...). Se sumen soles al saldo.</p>
+    <div class="field"><span class="q">De quin tipus?</span><div class="g-chips" id="gKinds"></div></div>
+    <label class="field"><span class="q">Quantes hores?</span><input type="text" inputmode="decimal" id="gHours" autocomplete="off" placeholder="Ex: 7,5"></label>
+    <label class="field"><span class="q">Quin dia te les han donat?</span><input type="date" id="gDate"></label>
+    <div class="field"><span class="q">Per a quin any?</span><div class="g-chips" id="gYears"></div></div>
+    <label class="field"><span class="q">Motiu</span><input type="text" id="gMotiu" autocomplete="off" maxlength="120" placeholder="Ex: Festiu treballat 25/12"></label>
+    <button class="btn primary big" type="submit">Afegeix-les</button>`;
+  sheetBg.append(sheet);
+  document.body.append(sheetBg);
+  const G_KINDS = ["hex", "cf", "ap", "form"];
+  let gKind = "hex", gYear = year, gYearTouched = false;
+  function gChips() {
+    $("gKinds").replaceChildren(...G_KINDS.map((k) => {
+      const b = BAGS.find((x) => x.k === k);
+      const c = el("button", "g-chip"); c.type = "button"; bagStyle(c, k);
+      c.append(el("i", "dot"), document.createTextNode(b.name));
+      c.setAttribute("aria-pressed", k === gKind ? "true" : "false");
+      c.addEventListener("click", () => { gKind = k; gChips(); });
+      return c;
+    }));
+    const ys = yearList(); if (!ys.includes(gYear)) ys.push(gYear); ys.sort();
+    $("gYears").replaceChildren(...ys.map((y) => {
+      const c = el("button", "g-chip", y); c.type = "button";
+      c.setAttribute("aria-pressed", y === gYear ? "true" : "false");
+      c.addEventListener("click", () => { gYear = y; gYearTouched = true; gChips(); });
+      return c;
+    }));
+  }
+  function openEarn() {
+    gKind = "hex"; gYear = year; gYearTouched = false;
+    $("gHours").value = ""; $("gMotiu").value = ""; $("gDate").value = today();
+    gChips();
+    sheetBg.hidden = false;
+    setTimeout(() => $("gHours").focus(), 50);
+  }
+  const closeEarn = () => { sheetBg.hidden = true; };
+  earnBtn.addEventListener("click", openEarn);
+  $("gClose").addEventListener("click", closeEarn);
+  sheetBg.addEventListener("click", (ev) => { if (ev.target === sheetBg) closeEarn(); });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape" && !sheetBg.hidden) closeEarn(); });
+  $("gDate").addEventListener("change", () => {
+    const v = $("gDate").value;
+    if (!gYearTouched && /^\d{4}/.test(v)) { gYear = v.slice(0, 4); gChips(); }
+  });
+  sheet.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const h = parse($("gHours").value);
+    if (isNaN(h) || !(h > 0)) { toast("Posa quantes hores t'han donat (un número més gran que 0).", true); $("gHours").focus(); return; }
+    if (h > 500) { toast("Són massa hores. Revisa el número.", true); $("gHours").focus(); return; }
+    const date = $("gDate").value || today();
+    allGuanys.push({ id: "g" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), date, any: gYear, k: gKind, h, motiu: $("gMotiu").value.trim(), createdAt: Date.now() });
+    persist(); closeEarn(); renderAll();
+    const b = BAGS.find((x) => x.k === gKind);
+    toast(`+${fmt(h)} h de ${b.name} (${gYear}) ✔`);
+  });
   $("haveForm").append($("resetAll").parentElement, $("resetConfirm"));
   loadState();
   resetForm();
