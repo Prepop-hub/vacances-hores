@@ -661,6 +661,7 @@ main.slide-r { animation: slideR .22s ease-out; }
 .list .entry.dcard .dacts.three { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
 .btn.small.ren { border-color: var(--warn, #b7791f); color: var(--warn, #b7791f); }
 .ren-note { margin: 0; background: var(--warn-bg, #fdf3e1); color: var(--warn, #8a5a00); border-radius: 10px; padding: 8px 12px; font-size: 0.9rem; font-weight: 600; }
+.ver-line { margin: 8px 2px 0; color: var(--muted); font-size: 0.8rem; text-align: center; }
 </style>
 </head>
 <body>
@@ -1983,24 +1984,45 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122123738";
-    const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
+    const BUILD = "20261122213320";
+    // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
+    const hardUpdate = async () => {
+      try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
+      location.replace(location.pathname + "?u=" + Date.now() + location.hash);
+    };
+    // Coming back from an update: tidy the address.
+    if (/[?&]u=\d+/.test(location.search)) { try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) { /* ignore */ } }
+    let openedAt = Date.now();
+    const tried = (b) => { try { return !!sessionStorage.getItem("vh-upd-" + b); } catch (e) { return true; } };
+    const busy = () => !!(document.querySelector("dialog[open]") || (document.querySelector(".sheet-bg") && !document.querySelector(".sheet-bg").hidden) || !$("haveForm").hidden || ($("fDate") && $("fDate").value && document.body.dataset.tab === "apuntar"));
+    const checkVersion = (auto) => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
-      .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
-      .catch(() => { /* offline: keep the saved version */ });
-    setTimeout(checkVersion, 1200);
-    document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") checkVersion(); });
-    $("updateBtn").addEventListener("click", async () => {
-      $("updateBtn").disabled = true; $("updateBtn").textContent = "Actualitzant…";
-      try {
-        const fresh = await fetch("./?fresh=" + Date.now(), { cache: "no-store" });
-        if (fresh.ok && window.caches) {
-          const names = await caches.keys();
-          await Promise.all(names.map(async (n) => (await caches.open(n)).put("./", fresh.clone())));
+      .then((v) => {
+        if (!v || !v.build || v.build === BUILD) return;
+        // Just opened and not in the middle of anything: update straight away.
+        if (auto && !busy() && Date.now() - openedAt < 15000 && !tried(v.build)) {
+          try { sessionStorage.setItem("vh-upd-" + v.build, "1"); } catch (e) { /* ignore */ }
+          hardUpdate();
+          return;
         }
-      } catch (e) { /* reload anyway */ }
-      location.reload();
+        $("updateBar").hidden = false;
+      })
+      .catch(() => { /* offline: keep the saved version */ });
+    setTimeout(() => checkVersion(true), 600);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") { openedAt = Date.now(); checkVersion(true); }
     });
+    $("updateBtn").addEventListener("click", () => {
+      $("updateBtn").disabled = true; $("updateBtn").textContent = "Actualitzant…";
+      hardUpdate();
+    });
+    // Version shown in the menu, to check you have the latest.
+    {
+      const m = BUILD.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
+      const ver = el("p", "ver-line", m ? `Versió del ${m[3]}/${m[2]}/${m[1]} ${m[4]}:${m[5]}` : "Versió local");
+      const addVer = () => { const panel = $("menuPanel"); if (panel) panel.append(ver); else setTimeout(addVer, 50); };
+      setTimeout(addVer, 0);
+    }
   } else {
     $("updateBtn").addEventListener("click", () => location.reload());
   }
