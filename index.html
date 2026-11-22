@@ -567,7 +567,7 @@ main.slide-r { animation: slideR .22s ease-out; }
 .g-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .g-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--surface-2); color: var(--ink); border-radius: 999px; padding: 7px 12px; font: inherit; font-weight: 600; cursor: pointer; }
 .g-chip[aria-pressed="true"] { border: 2px solid var(--bag, var(--accent)); background: var(--bagbg, var(--surface)); font-weight: 800; }
-.list .dsec.earned { color: var(--hex, var(--accent)); }
+.list .dsec.earned { color: var(--accent); }
 .gcard { display: grid !important; gap: 6px; border-left: 5px solid var(--bag) !important; background: var(--bagbg) !important; }
 .g-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 .g-amt { display: flex; align-items: center; gap: 6px; font-weight: 800; font-size: 1.05rem; }
@@ -575,6 +575,13 @@ main.slide-r { animation: slideR .22s ease-out; }
 .gcard .row-actions { justify-content: flex-end; }
 .yearned { font-size: 0.82rem; color: var(--muted); padding: 4px 2px 0; }
 @media (max-width: 520px) { body[data-tab="inici"] .earn-btn { padding: 7px 12px; font-size: 0.9rem; } }
+/* One colour per year */
+.yblock { border-left: 4px solid var(--bag); padding-left: 10px; }
+.yblock-h { color: var(--bag); }
+.byr { background: var(--bagbg); border-radius: 8px; }
+.year-btn[aria-pressed="true"] { background: var(--bag) !important; border-color: var(--bag) !important; color: var(--surface) !important; }
+.year-btn { border-color: var(--bag) !important; }
+.have-row { border-left: 4px solid var(--bag); padding-left: 8px; }
 </style>
 </head>
 <body>
@@ -926,6 +933,9 @@ main.slide-r { animation: slideR .22s ease-out; }
   const spent = (excludeId) => spentFor(year, excludeId);
   const el = (tag, cls, text) => { const x = document.createElement(tag); if (cls) x.className = cls; if (text != null) x.textContent = text; return x; };
   const bagStyle = (node, k) => { node.style.setProperty("--bag", `var(--${k})`); node.style.setProperty("--bagbg", `var(--${k}-bg)`); };
+  const YEAR_COLORS = ["ap", "cf", "vac", "hex", "form"];
+  const yearStyle = (node, y) => bagStyle(node, YEAR_COLORS[(((Number(y) || 2026) - 2026) % 5 + 5) % 5]);
+  const plainStyle = (node) => { node.style.setProperty("--bag", "var(--accent)"); node.style.setProperty("--bagbg", "var(--surface-2)"); };
 
   let toastTimer = null;
   function toast(msg, isErr) {
@@ -954,7 +964,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     const box = $("years");
     const label = el("span", "label", "De quin any?");
     const btns = yearList().map((y) => {
-      const b = el("button", "year-btn", y); b.type = "button";
+      const b = el("button", "year-btn", y); b.type = "button"; yearStyle(b, y);
       b.setAttribute("aria-pressed", y === year ? "true" : "false");
       b.addEventListener("click", () => { if (y !== year) switchYear(y); });
       return b;
@@ -1044,7 +1054,7 @@ main.slide-r { animation: slideR .22s ease-out; }
   function renderYearDetail(ys, bags, spentBy) {
     const years = ys.filter((y) => bags.some((b) => dispOf(y, b.k) != null)).sort();
     $("ydetail").replaceChildren(...years.map((y) => {
-      const block = el("div", "yblock");
+      const block = el("div", "yblock"); yearStyle(block, y);
       block.append(el("div", "yblock-h", y));
       const tbl = el("table", "ytable num");
       const head = el("tr");
@@ -1055,8 +1065,7 @@ main.slide-r { animation: slideR .22s ease-out; }
         const had = dispOf(y, b.k), used = spentBy[y][b.k], left = had - used;
         const tr = el("tr");
         const nm = el("th", "yname"); nm.scope = "row"; nm.title = b.name;
-        const dot = el("i", "dot"); bagStyle(dot, b.k);
-        nm.append(dot, document.createTextNode(shortName[b.k]));
+        nm.append(document.createTextNode(shortName[b.k]));
         const l = el("td", "yleft"); l.append(document.createTextNode(fmt(left)), el("small", null, b.unit === "dies" ? " d" : " h"));
         if (left < -1e-9) l.classList.add("neg"); else if (Math.abs(left) < 1e-9) l.classList.add("zero");
         const u = el("td", null, fmt(used)); if (!(used > 0)) u.classList.add("zero");
@@ -1077,8 +1086,8 @@ main.slide-r { animation: slideR .22s ease-out; }
       const parts = ys.filter((y) => dispOf(y, b.k) != null).map((y) => ({ y, had: dispOf(y, b.k), left: dispOf(y, b.k) - spentBy[y][b.k] }));
       const had = parts.reduce((a, x) => a + x.had, 0);
       const left = parts.reduce((a, x) => a + x.left, 0);
-      const card = el("div", "bcard"); bagStyle(card, b.k);
-      const name = el("div", "bcard-name"); name.append(el("i", "dot"), document.createTextNode(b.name));
+      const card = el("div", "bcard"); plainStyle(card);
+      const name = el("div", "bcard-name"); name.append(document.createTextNode(b.name));
       const big = el("div", "bcard-big num", fmt(left));
       big.append(el("small", null, `${unitWord(b, left)} et queden`));
       const track = el("div", "track"); const bar = el("i");
@@ -1088,7 +1097,7 @@ main.slide-r { animation: slideR .22s ease-out; }
       // One row per year: what is left of what you had that year.
       const yrs = el("div", "bcard-years num");
       parts.forEach((x) => {
-        const row = el("div", "byr");
+        const row = el("div", "byr"); yearStyle(row, x.y);
         if (x.left < -1e-9) row.classList.add("neg"); else if (Math.abs(x.left) < 1e-9) row.classList.add("zero");
         const val = el("span", "byr-val");
         val.append(el("b", null, fmt(x.left)), document.createTextNode(` de ${fmt(x.had)}`));
@@ -1139,7 +1148,7 @@ main.slide-r { animation: slideR .22s ease-out; }
   }
   function buildHaveFields() {
     $("haveFields").replaceChildren(...BAGS.map((b) => {
-      const row = el("div", "have-row"); bagStyle(row, b.k);
+      const row = el("div", "have-row"); yearStyle(row, year);
       const lab = el("label"); lab.htmlFor = "have_" + b.k;
       lab.append(el("i", "dot"), document.createTextNode(b.name + " "), el("em", null, b.unit === "dies" ? "(dies)" : "(hores)"));
       const inp = el("input"); inp.type = "text"; inp.inputMode = "decimal"; inp.id = "have_" + b.k; inp.autocomplete = "off"; inp.placeholder = "—";
@@ -1203,7 +1212,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     }
     const tiles = el("div", "tiles");
     slots.slice().sort((a, b) => a.y.localeCompare(b.y) || BAGS.indexOf(a.b) - BAGS.indexOf(b.b)).forEach((s) => {
-      const t = el("button", "tile"); t.type = "button"; t.id = "tile_" + s.id; bagStyle(t, s.b.k);
+      const t = el("button", "tile"); t.type = "button"; t.id = "tile_" + s.id; yearStyle(t, s.y);
       const name = el("b"); name.append(el("i", "dot"), document.createTextNode(shortName[s.b.k]), el("em", "tile-y", s.y));
       t.append(name, el("span", "num"));
       t.addEventListener("click", () => togglePick(s));
@@ -1216,7 +1225,7 @@ main.slide-r { animation: slideR .22s ease-out; }
   function renderPicked() {
     const rows = slots.filter((s) => picked.has(s.id)).map((s) => {
       const open = adjustOpen.has(s.id);
-      const row = el("div", "pick-row"); row.id = "row_" + s.id; bagStyle(row, s.b.k);
+      const row = el("div", "pick-row"); row.id = "row_" + s.id; yearStyle(row, s.y);
       const line = el("div", "pick-line");
       const info = el("div", "pick-info");
       const name = el("div", "src-name"); name.title = slotLabel(s); name.append(el("i", "dot"), document.createTextNode(`${shortName[s.b.k]} ${s.y}`));
@@ -1368,10 +1377,9 @@ main.slide-r { animation: slideR .22s ease-out; }
     const line = el("div", "num");
     const bar = el("div", "bar");
     const total = dur === "hores" ? Math.max(cov, 1e-9) : Math.max(NEED[dur], cov);
-    for (const b of BAGS) {
-      const h = b.k === "vac" ? hoursFromDays(t.vac) : t[b.k];
-      if (h > 0) { const i = el("i"); bagStyle(i, b.k); i.style.width = (h / total * 100) + "%"; bar.append(i); }
-    }
+    const perY = {};
+    slots.forEach((s) => { const v = clean[s.id]; if (v > 0) perY[s.y] = (perY[s.y] || 0) + (s.b.k === "vac" ? hoursFromDays(v) : v); });
+    Object.keys(perY).sort().forEach((y) => { const i = el("i"); yearStyle(i, y); i.style.width = (perY[y] / total * 100) + "%"; bar.append(i); });
     let miss = 0;
     if (dur === "hores") {
       line.textContent = cov > 0 ? `En total: ${fmt(cov)} hores` : "Toca d'on treus les hores i posa quantes.";
@@ -1390,7 +1398,7 @@ main.slide-r { animation: slideR .22s ease-out; }
       const from = el("div", "from");
       from.append(el("span", "from-label", "Es descomptarà de:"));
       const ch = el("div", "chips num");
-      used.forEach((s) => { const c = el("span", "chip", `${s.b.name} ${s.y}: ${fmt(clean[s.id])} ${unitWord(s.b, clean[s.id])}`); bagStyle(c, s.b.k); ch.append(c); });
+      used.forEach((s) => { const c = el("span", "chip", `${s.b.name} ${s.y}: ${fmt(clean[s.id])} ${unitWord(s.b, clean[s.id])}`); yearStyle(c, s.y); ch.append(c); });
       from.append(ch);
       box.append(from);
     }
@@ -1512,7 +1520,7 @@ main.slide-r { animation: slideR .22s ease-out; }
       for (const b of BAGS) {
         const v = amountOf(e, y, b.k);
         if (v > 0) {
-          const r = el("div", "drow"); bagStyle(r, b.k);
+          const r = el("div", "drow"); yearStyle(r, y);
           const nm = el("span", "drow-n"); nm.append(el("i", "dot"), document.createTextNode(`${shortName[b.k]} `), el("em", "tile-y", y));
           r.append(nm, el("span", "drow-v", `${fmt(v)} ${b.unit === "dies" ? unitWord(b, v) : "h"}`));
           rows.append(r);
@@ -1547,7 +1555,7 @@ main.slide-r { animation: slideR .22s ease-out; }
   }
   function earnedCard(g) {
     const b = BAGS.find((x) => x.k === g.k) || BAGS[0];
-    const li = el("li", "entry gcard"); bagStyle(li, g.k);
+    const li = el("li", "entry gcard"); yearStyle(li, g.any);
     const d = g.date ? new Date(g.date + "T12:00:00") : null;
     const top = el("div", "g-top");
     const amt = el("span", "g-amt num"); amt.append(el("i", "dot"), document.createTextNode(`+${fmt(g.h)} h ${b.name} `), el("em", "tile-y", g.any));
@@ -1826,7 +1834,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122114124";
+    const BUILD = "20261122115742";
     const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
@@ -1895,11 +1903,13 @@ main.slide-r { animation: slideR .22s ease-out; }
         b.classList.add("has");
         const t = { vac: 0, ap: 0, cf: 0, form: 0, hex: 0 };
         list.forEach((e) => { const x = totals(e); BAGS.forEach((bg) => { t[bg.k] += x[bg.k]; }); });
+        BAGS.forEach((bg) => { if (t[bg.k] > 0) label.push(`${bg.name}: ${fmt(t[bg.k])} ${unitWord(bg, t[bg.k])}`); });
+        const ys = [...new Set(list.flatMap((e) => yearsOf(e).filter((y) => BAGS.some((bg) => amountOf(e, y, bg.k) > 0))))].sort();
         const bars = el("span", "bars");
-        BAGS.forEach((bg) => { if (t[bg.k] > 0) { const i = el("i"); bagStyle(i, bg.k); bars.append(i); label.push(`${bg.name}: ${fmt(t[bg.k])} ${unitWord(bg, t[bg.k])}`); } });
+        ys.forEach((y) => { const i = el("i"); yearStyle(i, y); bars.append(i); });
         b.append(bars);
-        const main = BAGS.filter((bg) => t[bg.k] > 0).sort((x, y) => (y.k === "vac" ? hoursFromDays(t.vac) : t[y.k]) - (x.k === "vac" ? hoursFromDays(t.vac) : t[x.k]))[0];
-        if (main) bagStyle(b, main.k);
+        yearStyle(b, String(list[0].any));
+        label.push(`Compta per a l'any ${ys.join(" i ") || list[0].any}`);
         const half = list.find((e) => e.durada === "mig");
         if (half) b.append(el("span", "tag", half.torn === "tarda" ? "T" : "M"));
         else if (list.some((e) => e.durada === "hores")) b.append(el("span", "tag", "h"));
@@ -1922,6 +1932,7 @@ main.slide-r { animation: slideR .22s ease-out; }
       cells.push(b);
     }
     grid.replaceChildren(...cells);
+    const key7 = `${first.getFullYear()}-${String(first.getMonth() + 1).padStart(2, "0")}`;
     const monthHols = Object.keys(HOLIDAYS).filter((k) => k.startsWith(`${first.getFullYear()}-${String(first.getMonth() + 1).padStart(2, "0")}-`)).sort();
     const hl = $("calHols");
     if (monthHols.length) {
@@ -1938,7 +1949,8 @@ main.slide-r { animation: slideR .22s ease-out; }
       hl.hidden = known;
       hl.replaceChildren(el("span", "hint", `Encara no hi ha el calendari oficial de festius del ${y}.`));
     }
-    $("calLegend").replaceChildren(...BAGS.map((bg) => { const s = el("span"); const dot = el("i", "dot"); bagStyle(dot, bg.k); s.append(dot, document.createTextNode(shortName[bg.k])); return s; }),
+    const legendYears = [...new Set([String(first.getFullYear()), ...allEntries.filter((e) => (e.date || "").slice(0, 7) === key7).map((e) => String(e.any))])].sort();
+    $("calLegend").replaceChildren(...legendYears.map((y) => { const s = el("span"); const dot = el("i", "dot"); yearStyle(dot, y); s.append(dot, document.createTextNode(`Any ${y}`)); return s; }),
       el("span", null, "M = matí · T = tarda"),
       (() => { const s = el("span"); s.append(el("i", "hol-key"), document.createTextNode("Festiu oficial")); return s; })());
   }
@@ -2065,15 +2077,15 @@ main.slide-r { animation: slideR .22s ease-out; }
   function gChips() {
     $("gKinds").replaceChildren(...G_KINDS.map((k) => {
       const b = BAGS.find((x) => x.k === k);
-      const c = el("button", "g-chip"); c.type = "button"; bagStyle(c, k);
-      c.append(el("i", "dot"), document.createTextNode(b.name));
+      const c = el("button", "g-chip"); c.type = "button";
+      c.append(document.createTextNode(b.name));
       c.setAttribute("aria-pressed", k === gKind ? "true" : "false");
       c.addEventListener("click", () => { gKind = k; gChips(); });
       return c;
     }));
     const ys = yearList(); if (!ys.includes(gYear)) ys.push(gYear); ys.sort();
     $("gYears").replaceChildren(...ys.map((y) => {
-      const c = el("button", "g-chip", y); c.type = "button";
+      const c = el("button", "g-chip", y); c.type = "button"; yearStyle(c, y);
       c.setAttribute("aria-pressed", y === gYear ? "true" : "false");
       c.addEventListener("click", () => { gYear = y; gYearTouched = true; gChips(); });
       return c;
