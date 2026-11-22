@@ -639,6 +639,23 @@ main.slide-r { animation: slideR .22s ease-out; }
 .home-sec .next { box-shadow: 0 2px 8px rgba(10, 40, 36, .07); }
 .home-sec details.spent { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 12px; }
 @media (max-width: 520px) { .brow { padding: 8px 10px 8px 8px !important; } .brow-ic { width: 34px; height: 34px; } }
+/* Inici: fit on one phone screen */
+.next-k { display: flex; justify-content: space-between; gap: 8px; }
+.next-k .next-in { text-transform: none; letter-spacing: 0; font-size: 0.78rem; }
+@media (max-width: 520px) {
+  body[data-tab="inici"] .home-sec { gap: 8px !important; }
+  .brow { padding: 7px 10px 7px 8px !important; }
+  .brow-ic { width: 32px; height: 32px; border-radius: 10px; }
+  .brow-ic .ic { width: 19px; height: 19px; }
+  .brow { grid-template-columns: 34px minmax(0, 1fr) auto !important; column-gap: 10px !important; }
+  .brow-years { font-size: 0.76rem; gap: 2px 8px; }
+  .brow-bar { height: 4px; margin-top: 4px; }
+  .brow-val b { font-size: 1.3rem; }
+  .bal-list { gap: 6px; }
+  .home-sec .next { padding: 8px 10px; }
+  .home-sec .next .dbox { width: 44px; }
+  .home-sec .btn.act-btn { padding: 9px 6px; }
+}
 </style>
 </head>
 <body>
@@ -1204,8 +1221,9 @@ main.slide-r { animation: slideR .22s ease-out; }
     const wd = d.toLocaleDateString("ca-ES", { weekday: "long" });
     const from = [];
     for (const y of yearsOf(next).slice().sort()) for (const b of BAGS) { const v = amountOf(next, y, b.k); if (v > 0) from.push(`${shortName[b.k]} ${y}`); }
-    txt.append(el("span", "next-k", "El teu pròxim dia"), el("b", null, `${wd.charAt(0).toUpperCase() + wd.slice(1)} · ${durLabel(next)}`), el("span", "next-s", from.join(" + ") || "Sense saldo triat"));
-    box.replaceChildren(dateBox, txt, el("span", "next-in", when));
+    const kick = el("span", "next-k"); kick.append(document.createTextNode("El teu pròxim dia"), el("span", "next-in", when));
+    txt.append(kick, el("b", null, `${wd.charAt(0).toUpperCase() + wd.slice(1)} · ${durLabel(next)}`), el("span", "next-s", from.join(" + ") || "Sense saldo triat"));
+    box.replaceChildren(dateBox, txt);
     box.onclick = () => {
       showTab("dies");
       const li = $("entry_" + next.id);
@@ -1936,7 +1954,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122121924";
+    const BUILD = "20261122122020";
     const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
