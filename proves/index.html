@@ -722,6 +722,52 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
   .hero-next { padding: 14px 14px 14px 16px; }
   .hn-badge { width: 66px; height: 66px; }
 }
+/* ---------- Fit on one screen (phones) ---------- */
+body.fit-1 .wrap { gap: 12px; }
+body.fit-1[data-tab="inici"] main { padding-bottom: 80px; }
+body.fit-1[data-tab="inici"] .home-sec { gap: 8px !important; }
+body.fit-1 .hero-next { padding: 10px 12px 10px 14px; border-radius: 18px; }
+body.fit-1 .hn-t { font-size: 1.08rem; }
+body.fit-1 .hn-badge { width: 54px; height: 54px; }
+body.fit-1 .hn-badge b { font-size: 1.25rem; }
+body.fit-1 .ring-grid { gap: 8px; }
+body.fit-1 .rtile { padding: 8px 6px; gap: 3px; border-radius: 16px; }
+body.fit-1 .ring-wrap { width: 70px; height: 70px; }
+body.fit-1 .ring-mid b { font-size: 1.3rem; }
+body.fit-2 #balTitle { display: none; }
+body.fit-2 .greet { display: none; }
+body.fit-2 .ring-wrap { width: 58px; height: 58px; }
+body.fit-2 .ring-bg, body.fit-2 .ring-seg { stroke-width: 10; }
+body.fit-2 .ring-mid b { font-size: 1.1rem; }
+body.fit-2 .ring-mid small { font-size: 0.62rem; }
+body.fit-2 .rtile-name { font-size: 0.82rem; }
+body.fit-2 .rtile-leg { font-size: 0.68rem; }
+body.fit-2 .rtile-ic { width: 24px; height: 24px; top: 6px; left: 6px; }
+body.fit-2 .hn-s { font-size: 0.78rem; }
+body.fit-3 .ring-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+body.fit-3 .rtile-ic { display: none; }
+body.fit-3 .rtile-name { font-size: 0.74rem; }
+body.fit-3 .rleg { white-space: normal; }
+
+body.fit-1[data-tab="apuntar"] .step { padding: 10px; gap: 8px; }
+body.fit-1 #entryForm { gap: 8px; }
+body.fit-1 .choice { padding: 6px 4px; }
+body.fit-1 .choice small { display: none; }
+body.fit-1 .tile { padding: 5px 8px; }
+body.fit-1 .cover { padding: 8px 10px; gap: 6px; }
+body.fit-2 .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+body.fit-2 .tile { font-size: 0.82rem; padding: 4px 6px; }
+body.fit-2 .field { gap: 4px; }
+body.fit-2 .cover .num { font-size: 0.85rem; }
+body.fit-3 #noteBtn { padding: 0; }
+body.fit-3 .btn.primary.big { padding: 9px 14px; }
+body.fit-3 .tile { font-size: 0.76rem; }
+
+body.fit-1 .cal-day { aspect-ratio: auto; height: 40px; min-height: 0; }
+body.fit-1 .cal-hols { padding: 6px 10px; font-size: 0.82rem; gap: 2px; }
+body.fit-1 .cal-legend { font-size: 0.76rem; gap: 8px; }
+body.fit-2 .cal-day { height: 34px; font-size: 0.82rem; }
+body.fit-3 .cal-legend { display: none; }
 </style>
 </head>
 <body>
@@ -2074,7 +2120,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122215001";
+    const BUILD = "20261122215814";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2116,6 +2162,28 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
   } else {
     $("updateBtn").addEventListener("click", () => location.reload());
   }
+
+  /* ---------- Fit on one screen ---------- */
+  (function () {
+    let raf = 0;
+    const LEVELS = ["fit-1", "fit-2", "fit-3"];
+    const fit = () => {
+      raf = 0;
+      const b = document.body;
+      b.classList.remove(...LEVELS);
+      if (b.dataset.tab === "dies" || window.innerWidth > 760) return;
+      if (!$("haveForm").hidden) return;
+      for (const c of LEVELS) {
+        if (document.documentElement.scrollHeight <= window.innerHeight + 1) break;
+        b.classList.add(c);
+      }
+    };
+    const ask = () => { if (!raf) raf = requestAnimationFrame(fit); };
+    new MutationObserver(ask).observe(document.body, { attributes: true, attributeFilter: ["data-tab"] });
+    if (window.ResizeObserver) new ResizeObserver(ask).observe(document.querySelector("main"));
+    window.addEventListener("resize", ask);
+    setTimeout(ask, 0);
+  })();
 
   /* ---------- Start ---------- */
   /* ---------- Official holidays ---------- */
