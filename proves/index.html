@@ -2201,7 +2201,7 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122221247";
+    const BUILD = "20261122221349";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2267,7 +2267,16 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
       b.style.removeProperty("--ring");
       if (b.dataset.tab !== "inici" || window.innerWidth > 760) return;
       if (!$("haveForm").hidden) return;
-      if (!fits()) { for (const c of SHRINK) { b.classList.add(c); if (fits()) break; } return; }
+      if (!fits()) {
+        for (const c of SHRINK) { b.classList.add(c); if (fits()) break; }
+        // Smaller now: let the tiles take whatever room is left.
+        const tb0 = document.querySelector(".tabbar");
+        if (grid && !grid.hidden && tb0 && fits()) {
+          const free = Math.min(tb0.getBoundingClientRect().top - 12 - grid.getBoundingClientRect().bottom, window.innerHeight - document.documentElement.offsetHeight - 1);
+          if (free > 0) grid.style.minHeight = (grid.getBoundingClientRect().height + free) + "px";
+        }
+        return;
+      }
       // Room left: the tiles grow to fill the screen down to the tab bar.
       const tb = document.querySelector(".tabbar");
       if (!grid || grid.hidden || !tb || !grid.children.length) return;
