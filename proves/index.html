@@ -672,7 +672,7 @@ main.slide-r { animation: slideR .22s ease-out; }
 .brow-years { gap: 2px 12px !important; }
 .yr-pill { font-size: 0.82rem; }
 .greet b { font-size: 1.15rem; }
-body[data-tab="inici"] main { padding-bottom: 96px; }
+body[data-tab="inici"] main { padding-bottom: 0; }
 .menu-item { width: 100%; justify-content: flex-start; display: flex; align-items: center; gap: 8px; text-align: left; border-radius: 12px; font-weight: 700; margin-bottom: 6px; }
 .menu-item .ic { color: var(--accent); }
 .fab-menu { position: fixed; right: 16px; bottom: calc(158px + env(safe-area-inset-bottom, 0px)); z-index: 55; display: grid; gap: 8px; justify-items: end; }
@@ -724,7 +724,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
 }
 /* ---------- Fit on one screen (phones) ---------- */
 body.fit-1 .wrap { gap: 12px; }
-body.fit-1[data-tab="inici"] main { padding-bottom: 80px; }
+
 body.fit-1[data-tab="inici"] .home-sec { gap: 8px !important; }
 body.fit-1 .hero-next { padding: 10px 12px 10px 14px; border-radius: 18px; }
 body.fit-1 .hn-t { font-size: 1.08rem; }
@@ -2186,7 +2186,7 @@ body.big-2 .rtile-name { font-size: 1.05rem; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122220608";
+    const BUILD = "20261122220718";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2237,7 +2237,12 @@ body.big-2 .rtile-name { font-size: 1.05rem; }
     let raf = 0;
     const SHRINK = ["fit-1", "fit-2", "fit-3"];
     const GROW = ["big-1", "big-2"];
-    const fits = () => document.documentElement.scrollHeight <= window.innerHeight + 1;
+    const fits = () => {
+      const last = $("bigCards"), tb = document.querySelector(".tabbar");
+      if (!last || !tb) return document.documentElement.scrollHeight <= window.innerHeight + 1;
+      const bottom = (last.hidden ? last.previousElementSibling || last : last).getBoundingClientRect().bottom;
+      return bottom + window.scrollY <= tb.getBoundingClientRect().top + window.scrollY - 10 && document.documentElement.scrollHeight <= window.innerHeight + 1;
+    };
     const fit = () => {
       raf = 0;
       const b = document.body;
