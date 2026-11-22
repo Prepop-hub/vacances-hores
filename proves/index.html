@@ -1984,7 +1984,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122212728";
+    const BUILD = "20261122212856";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2020,7 +2020,8 @@ main.slide-r { animation: slideR .22s ease-out; }
     {
       const m = BUILD.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})/);
       const ver = el("p", "ver-line", m ? `Versió del ${m[3]}/${m[2]}/${m[1]} ${m[4]}:${m[5]}` : "Versió local");
-      const panel = $("menuPanel"); if (panel) panel.append(ver);
+      const addVer = () => { const panel = $("menuPanel"); if (panel) panel.append(ver); else setTimeout(addVer, 50); };
+      setTimeout(addVer, 0);
     }
   } else {
     $("updateBtn").addEventListener("click", () => location.reload());
