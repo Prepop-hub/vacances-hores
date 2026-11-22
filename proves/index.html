@@ -734,7 +734,8 @@ body.fit-1 .ring-grid { gap: 8px; }
 body.fit-1 .rtile { padding: 8px 6px; gap: 3px; border-radius: 16px; }
 body.fit-1 .ring-wrap { width: 70px; height: 70px; }
 body.fit-1 .ring-mid b { font-size: 1.3rem; }
-body.fit-2 #balTitle { display: none; }
+body.fit-2 #balTitle .sec-t { display: none; }
+body.fit-2 #balTitle { justify-content: flex-end; }
 body.fit-2 .greet { display: none; }
 body.fit-2 .ring-wrap { width: 58px; height: 58px; }
 body.fit-2 .ring-bg, body.fit-2 .ring-seg { stroke-width: 10; }
@@ -801,9 +802,14 @@ body.stretch .ring-wrap { width: var(--ring, 92px); height: var(--ring, 92px); }
 body.stretch .ring-mid b { font-size: calc(var(--ring, 92px) * 0.26); }
 body.stretch .ring-mid small { font-size: calc(var(--ring, 92px) * 0.085 + 2px); }
 body.stretch .rtile { align-content: center; gap: 8px; }
-/* The + button sits over the bottom-right tile: keep its content above it. */
-body.stretch .ring-grid > .rtile:last-child { padding-bottom: 62px; }
-body.stretch .ring-grid > .rtile:nth-last-child(2):nth-child(odd) { padding-bottom: 62px; }
+/* Inici: no floating + (it would cover a tile); two small buttons next to the title instead. */
+body[data-tab="inici"] #fab { display: none !important; }
+.bal-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: -4px; }
+.bal-head .sec-t { margin: 0; }
+.bal-acts { display: flex; gap: 6px; }
+.bal-act { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--accent); color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 5px 11px; font: inherit; font-size: 0.82rem; font-weight: 800; cursor: pointer; }
+.bal-act .ic { width: 15px; height: 15px; }
+.bal-act.main { background: var(--accent); color: var(--accent-ink); }
 body.stretch .rtile-name { font-size: 1rem; }
 body.stretch .rtile-leg { font-size: 0.8rem; }
 </style>
@@ -2195,7 +2201,7 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122221142";
+    const BUILD = "20261122221247";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2520,8 +2526,15 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
     const greet = el("div", "greet"); greet.id = "greet";
     const nextDay = el("button", "next"); nextDay.type = "button"; nextDay.id = "nextDay"; nextDay.hidden = true;
     sec.querySelector(".step-head").after(greet, nextDay);
-    const balTitle = el("div", "sec-t", "El que et queda"); balTitle.id = "balTitle";
+    const balTitle = el("div", "bal-head"); balTitle.id = "balTitle";
+    const actDay = el("button", "bal-act main"); actDay.type = "button"; actDay.append(icon("plus"), document.createTextNode("Dia"));
+    actDay.title = "Apunta un dia de festa";
+    const actHours = el("button", "bal-act"); actHours.type = "button"; actHours.append(icon("plus"), document.createTextNode("Hores guanyades"));
+    const acts = el("div", "bal-acts"); acts.append(actDay, actHours);
+    balTitle.append(el("div", "sec-t", "El que et queda"), acts);
     $("bigCards").before(balTitle);
+    actDay.addEventListener("click", () => { resetForm(); showTab("apuntar"); });
+    actHours.addEventListener("click", () => openEarn());
     const actRow = el("div", "act-row"); actRow.append($("haveBtn"), earnBtn);
     $("bigCards").after(actRow);
     actRow.after($("haveForm"));
