@@ -552,6 +552,12 @@ a.btn { text-decoration: none; display: inline-block; }
   .stepper input { width: 80px; }
   .have-row { grid-template-columns: 1fr 100px; }
 }
+/* Swipe between tabs */
+@keyframes slideL { from { transform: translateX(28px); opacity: .4; } to { transform: none; opacity: 1; } }
+@keyframes slideR { from { transform: translateX(-28px); opacity: .4; } to { transform: none; opacity: 1; } }
+main.slide-l { animation: slideL .22s ease-out; }
+main.slide-r { animation: slideR .22s ease-out; }
+@media (prefers-reduced-motion: reduce) { main.slide-l, main.slide-r { animation: none; } }
 </style>
 </head>
 <body>
@@ -1751,7 +1757,7 @@ a.btn { text-decoration: none; display: inline-block; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261121222927";
+    const BUILD = "20261122113427";
     const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
@@ -1909,6 +1915,42 @@ a.btn { text-decoration: none; display: inline-block; }
   document.querySelectorAll(".tabbar .tab").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
   $("fab").addEventListener("click", () => { resetForm(); showTab("apuntar"); });
   window.addEventListener("hashchange", () => showTab(location.hash.slice(1), true));
+
+  // Swipe left/right with a finger to move between tabs, like a phone app.
+  (function () {
+    let sx = 0, sy = 0, st = 0, ok = false;
+    const skip = (node) => {
+      for (let n = node; n && n !== document.body; n = n.parentElement) {
+        if (n.matches && n.matches("input, textarea, select, [contenteditable], .menu-panel, .tabbar")) return true;
+        const cs = getComputedStyle(n);
+        if ((cs.overflowX === "auto" || cs.overflowX === "scroll") && n.scrollWidth > n.clientWidth + 2) return true;
+      }
+      return false;
+    };
+    document.addEventListener("touchstart", (ev) => {
+      ok = false;
+      if (ev.touches.length !== 1 || !$("menuPanel").hidden) return;
+      const p = ev.touches[0];
+      // Leave the screen edges to the phone's own back gesture.
+      if (p.clientX < 24 || p.clientX > window.innerWidth - 24) return;
+      if (skip(ev.target)) return;
+      sx = p.clientX; sy = p.clientY; st = Date.now(); ok = true;
+    }, { passive: true });
+    document.addEventListener("touchend", (ev) => {
+      if (!ok) return; ok = false;
+      const p = ev.changedTouches[0];
+      const dx = p.clientX - sx, dy = p.clientY - sy;
+      if (Date.now() - st > 700 || Math.abs(dx) < 70 || Math.abs(dx) < Math.abs(dy) * 1.8) return;
+      const sel = window.getSelection && String(window.getSelection());
+      if (sel) return;
+      const i = TABS.indexOf(currentTab) + (dx < 0 ? 1 : -1);
+      if (i < 0 || i >= TABS.length) return;
+      const main = document.querySelector("main");
+      main.classList.remove("slide-l", "slide-r"); void main.offsetWidth;
+      main.classList.add(dx < 0 ? "slide-l" : "slide-r");
+      showTab(TABS[i]);
+    }, { passive: true });
+  })();
 
   const menuPanel = el("div", "menu-panel"); menuPanel.id = "menuPanel"; menuPanel.hidden = true;
   const menuHead = el("div", "menu-head");
