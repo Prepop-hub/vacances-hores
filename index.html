@@ -722,6 +722,58 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
   .hero-next { padding: 14px 14px 14px 16px; }
   .hn-badge { width: 66px; height: 66px; }
 }
+/* ---------- Fit on one screen (phones) ---------- */
+body.fit-1 .wrap { gap: 12px; }
+body.fit-1[data-tab="inici"] main { padding-bottom: 80px; }
+body.fit-1[data-tab="inici"] .home-sec { gap: 8px !important; }
+body.fit-1 .hero-next { padding: 10px 12px 10px 14px; border-radius: 18px; }
+body.fit-1 .hn-t { font-size: 1.08rem; }
+body.fit-1 .hn-badge { width: 54px; height: 54px; }
+body.fit-1 .hn-badge b { font-size: 1.25rem; }
+body.fit-1 .ring-grid { gap: 8px; }
+body.fit-1 .rtile { padding: 8px 6px; gap: 3px; border-radius: 16px; }
+body.fit-1 .ring-wrap { width: 70px; height: 70px; }
+body.fit-1 .ring-mid b { font-size: 1.3rem; }
+body.fit-2 #balTitle { display: none; }
+body.fit-2 .greet { display: none; }
+body.fit-2 .ring-wrap { width: 58px; height: 58px; }
+body.fit-2 .ring-bg, body.fit-2 .ring-seg { stroke-width: 10; }
+body.fit-2 .ring-mid b { font-size: 1.1rem; }
+body.fit-2 .ring-mid small { font-size: 0.62rem; }
+body.fit-2 .rtile-name { font-size: 0.82rem; }
+body.fit-2 .rtile-leg { font-size: 0.68rem; }
+body.fit-2 .rtile-ic { width: 24px; height: 24px; top: 6px; left: 6px; }
+body.fit-2 .hn-s { font-size: 0.78rem; }
+body.fit-3 .ring-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+body.fit-3 .rtile-ic { display: none; }
+body.fit-3 .rtile-name { font-size: 0.74rem; }
+body.fit-3 .rleg { white-space: normal; }
+
+body.fit-1[data-tab="apuntar"] .step { padding: 10px; gap: 8px; }
+body.fit-1 #entryForm { gap: 8px; }
+body.fit-1 .choice { padding: 6px 4px; }
+body.fit-1 .choice small { display: none; }
+body.fit-1 .tile { padding: 5px 8px; }
+body.fit-1 .cover { padding: 8px 10px; gap: 6px; }
+body.fit-2 .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+body.fit-2 .tile { font-size: 0.82rem; padding: 4px 6px; }
+body.fit-2 .field { gap: 4px; }
+body.fit-2 .cover .num { font-size: 0.85rem; }
+body.fit-3 #noteBtn { padding: 0; }
+body.fit-3 .btn.primary.big { padding: 9px 14px; }
+body.fit-3 .tile { font-size: 0.76rem; }
+
+body.fit-1 .cal-day { aspect-ratio: auto; height: 40px; min-height: 0; }
+body.fit-1 .cal-hols { padding: 6px 10px; font-size: 0.82rem; gap: 2px; }
+body.fit-1 .cal-legend { font-size: 0.76rem; gap: 8px; }
+body.fit-2 .cal-day { height: 34px; font-size: 0.82rem; }
+body.fit-3 .cal-legend { display: none; }
+/* From-to time for "Unes hores" */
+.range { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+.range-f { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+.range-f input { width: 7.2em; padding: 8px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; }
+.range-h { font-weight: 800; color: var(--accent); }
+.range-h.bad { color: var(--bad); }
 </style>
 </head>
 <body>
@@ -820,6 +872,11 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
           <div class="choices two" role="radiogroup" aria-labelledby="tornQ">
             <label class="choice"><input type="radio" name="torn" id="tornMati" value="mati" checked><b><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18M7 19a5 5 0 0 1 10 0"/><path d="M12 4v5M9.5 6.5 12 4l2.5 2.5M4.6 12.6l1.4 1.4M19.4 12.6 18 14"/></svg> Matí</b></label>
             <label class="choice"><input type="radio" name="torn" id="tornTarda" value="tarda"><b><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19h18M7 19a5 5 0 0 1 10 0"/><path d="M12 9V4M9.5 6.5 12 9l2.5-2.5M4.6 12.6l1.4 1.4M19.4 12.6 18 14"/></svg> Tarda</b></label>
+          </div>
+          <div class="range" id="rangeBox" hidden>
+            <label class="range-f"><span>De</span><input type="time" id="fFrom" step="300"></label>
+            <label class="range-f"><span>a</span><input type="time" id="fTo" step="300"></label>
+            <span class="range-h num" id="rangeH"></span>
           </div>
         </div>
       </div>
@@ -961,7 +1018,13 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
   const NEED = { mig: 7.5, sencer: 14.5 };
   const DUR = { mig: "Mig dia", sencer: "Dia sencer", hores: "Unes hores" };
   const TORN = { mati: "matí", tarda: "tarda" };
-  const durLabel = (e) => (e.durada === "mig" && TORN[e.torn] ? `Mig dia · ${TORN[e.torn]}` : DUR[e.durada] || "—");
+  const rangeText = (e) => (e.desde && e.fins ? `${e.desde}–${e.fins}` : e.desde ? `des de les ${e.desde}` : e.fins ? `fins a les ${e.fins}` : "");
+  const durLabel = (e) => {
+    if (e.durada === "mig" && TORN[e.torn]) return `Mig dia · ${TORN[e.torn]}`;
+    if (e.durada === "hores") return ["Unes hores", TORN[e.torn], rangeText(e)].filter(Boolean).join(" · ");
+    return DUR[e.durada] || "—";
+  };
+  const minutesOf = (s) => { const m = /^(\d{1,2}):(\d{2})/.exec(s || ""); return m ? Number(m[1]) * 60 + Number(m[2]) : null; };
   const tornValue = () => (document.querySelector('input[name="torn"]:checked') || {}).value || "mati";
   const KEY = "vacances-i-hores-compartit-v1";
   const START = {"version": 2, "disp": {}, "dies": []};
@@ -1495,6 +1558,13 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
           }
           if (v > 0) vals[s.id] = fmt(Math.round(v * 100) / 100);
         }
+      } else if (dur === "hores" && q > 1e-9 && s.b.k !== "vac") {
+        // "Unes hores" with a from-to time: fill the hours of that time.
+        const a = minutesOf($("fFrom").value), b = minutesOf($("fTo").value);
+        if (a != null && b != null && b > a) {
+          const need = (b - a) / 60 - hoursOf(slotTotals(clean));
+          if (need > 1e-9) vals[s.id] = fmt(Math.round(Math.min(need, q) * 100) / 100);
+        }
       }
     }
     renderPicked();
@@ -1552,7 +1622,18 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
 
   function updateForm() {
     const dur = durValue();
-    $("tornBox").hidden = dur !== "mig";
+    $("tornBox").hidden = dur !== "mig" && dur !== "hores";
+    $("tornQ").textContent = dur === "hores" ? "Matí o tarda? I de quina hora a quina?" : "Quin mig dia?";
+    $("rangeBox").hidden = dur !== "hores";
+    {
+      const a = minutesOf($("fFrom").value), b = minutesOf($("fTo").value);
+      const rh = $("rangeH");
+      if (a != null && b != null) {
+        const diff = b - a;
+        rh.textContent = diff > 0 ? `${fmt(diff / 60)} ${diff === 60 ? "hora" : "hores"}` : "Revisa les hores";
+        rh.classList.toggle("bad", !(diff > 0));
+      } else { rh.textContent = ""; rh.classList.remove("bad"); }
+    }
     const { clean, bad } = readSlots();
     const t = slotTotals(clean);
     const cov = hoursOf(t);
@@ -1645,6 +1726,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     $("fDate").value = today();
     $("durSencer").checked = true;
     $("tornMati").checked = true;
+    $("fFrom").value = ""; $("fTo").value = "";
     $("fNotes").value = "";
     buildSources();
     updateForm();
@@ -1658,6 +1740,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     $("fDate").value = e.date || "";
     $({ mig: "durMig", sencer: "durSencer", hores: "durHores" }[e.durada] || "durSencer").checked = true;
     $(e.torn === "tarda" ? "tornTarda" : "tornMati").checked = true;
+    $("fFrom").value = e.desde || ""; $("fTo").value = e.fins || "";
     vals = {}; picked = new Set(); adjustOpen = new Set();
     buildSources();
     for (const s of slots) { const v = amountOf(e, s.y, s.b.k); if (v > 0) { vals[s.id] = fmt(v); picked.add(s.id); } }
@@ -1677,7 +1760,13 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
       return;
     }
     const data = { date: $("fDate").value, durada: durValue(), notes: $("fNotes").value.trim(), any: year };
-    if (data.durada === "mig") data.torn = tornValue();
+    if (data.durada === "mig" || data.durada === "hores") data.torn = tornValue();
+    if (data.durada === "hores") {
+      const a = $("fFrom").value, b = $("fTo").value;
+      if (a && b && minutesOf(b) <= minutesOf(a)) { toast("L'hora d'acabar ha de ser més tard que la d'començar.", true); $("fTo").focus(); return; }
+      if (a) data.desde = a;
+      if (b) data.fins = b;
+    }
     for (const b of BAGS) data[b.k] = 0;
     const extra = {};
     for (const s of slots) {
@@ -1936,7 +2025,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     const motiuText = motius.length > 1 ? motius[0] + " i " + joinCa(motius.slice(1).map(lower1)) : motiu;
     const durText = e.durada === "sencer" ? "la jornada sencera"
       : e.durada === "mig" ? `mitja jornada (${e.torn === "tarda" ? "tarda" : "matí"})`
-      : `${fmt(covered(e))} hores`;
+      : `${fmt(covered(e))} hores${[TORN[e.torn] ? `al ${e.torn === "tarda" ? "torn de tarda" : "torn de matí"}` : "", e.desde && e.fins ? `de ${e.desde} a ${e.fins}` : e.desde ? `des de les ${e.desde}` : e.fins ? `fins a les ${e.fins}` : ""].filter(Boolean).map((x) => " " + x).join(",")}`;
     const lines = [];
     for (const y of yearsOf(e).slice().sort()) {
       for (const b of BAGS) {
@@ -2074,7 +2163,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122215051";
+    const BUILD = "20261122220143";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2116,6 +2205,30 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
   } else {
     $("updateBtn").addEventListener("click", () => location.reload());
   }
+
+  ["fFrom", "fTo"].forEach((id) => $(id).addEventListener("input", updateForm));
+
+  /* ---------- Fit on one screen ---------- */
+  (function () {
+    let raf = 0;
+    const LEVELS = ["fit-1", "fit-2", "fit-3"];
+    const fit = () => {
+      raf = 0;
+      const b = document.body;
+      b.classList.remove(...LEVELS);
+      if (b.dataset.tab !== "inici" || window.innerWidth > 760) return;
+      if (!$("haveForm").hidden) return;
+      for (const c of LEVELS) {
+        if (document.documentElement.scrollHeight <= window.innerHeight + 1) break;
+        b.classList.add(c);
+      }
+    };
+    const ask = () => { if (!raf) raf = requestAnimationFrame(fit); };
+    new MutationObserver(ask).observe(document.body, { attributes: true, attributeFilter: ["data-tab"] });
+    if (window.ResizeObserver) new ResizeObserver(ask).observe(document.querySelector("main"));
+    window.addEventListener("resize", ask);
+    setTimeout(ask, 0);
+  })();
 
   /* ---------- Start ---------- */
   /* ---------- Official holidays ---------- */
