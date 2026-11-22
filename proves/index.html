@@ -2192,7 +2192,7 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122220906";
+    const BUILD = "20261122220953";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2268,10 +2268,16 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
       const rows = Math.ceil(grid.children.length / 2);
       const ring = Math.round(Math.min(150, 92 + (spare / rows) * 0.55));
       b.classList.add("stretch");
-      b.style.setProperty("--ring", ring + "px");
-      grid.style.minHeight = (grid.getBoundingClientRect().height + spare) + "px";
-      // If the bigger rings made it overflow, step back.
-      if (!fits()) { const r2 = Math.max(92, ring - Math.ceil((grid.getBoundingClientRect().bottom - tb.getBoundingClientRect().top + 12) / rows)); b.style.setProperty("--ring", r2 + "px"); grid.style.minHeight = ""; const sp2 = tb.getBoundingClientRect().top - 12 - grid.getBoundingClientRect().bottom; if (sp2 > 0) grid.style.minHeight = (grid.getBoundingClientRect().height + sp2) + "px"; }
+      let ringPx = ring;
+      b.style.setProperty("--ring", ringPx + "px");
+      for (let i = 0; i < 6; i++) {
+        grid.style.minHeight = "";
+        const free = Math.min(tb.getBoundingClientRect().top - 12 - grid.getBoundingClientRect().bottom, window.innerHeight - document.documentElement.offsetHeight - 1);
+        if (free >= 0) { grid.style.minHeight = (grid.getBoundingClientRect().height + free) + "px"; break; }
+        ringPx -= Math.ceil(-free / rows) + 2;
+        if (ringPx < 84) { b.classList.remove("stretch"); b.style.removeProperty("--ring"); break; }
+        b.style.setProperty("--ring", ringPx + "px");
+      }
     };
     const ask = () => { if (!raf) raf = requestAnimationFrame(fit); };
     new MutationObserver(ask).observe(document.body, { attributes: true, attributeFilter: ["data-tab"] });
