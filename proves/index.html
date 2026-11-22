@@ -774,6 +774,29 @@ body.fit-3 .cal-legend { display: none; }
 .range-f input { width: 7.2em; padding: 8px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; }
 .range-h { font-weight: 800; color: var(--accent); }
 .range-h.bad { color: var(--bad); }
+/* Inici: use the room on tall phones */
+.ring-grid { grid-auto-rows: 1fr; }
+body.big-1 .home-sec { gap: 14px !important; }
+body.big-1 .greet b { font-size: 1.45rem; }
+body.big-1 .hero-next { padding: 20px 18px 20px 20px; border-radius: 24px; }
+body.big-1 .hn-t { font-size: 1.4rem; }
+body.big-1 .hn-s { font-size: 0.95rem; }
+body.big-1 .hn-badge { width: 84px; height: 84px; }
+body.big-1 .hn-badge b { font-size: 1.9rem; }
+body.big-1 .ring-grid { gap: 12px; }
+body.big-1 .rtile { padding: 16px 10px; gap: 8px; border-radius: 22px; align-content: center; }
+body.big-1 .ring-wrap { width: 108px; height: 108px; }
+body.big-1 .ring-mid b { font-size: 1.9rem; }
+body.big-1 .ring-mid small { font-size: 0.8rem; }
+body.big-1 .rtile-name { font-size: 1rem; }
+body.big-1 .rtile-leg { font-size: 0.82rem; gap: 2px; }
+body.big-1 .rtile-ic { width: 34px; height: 34px; top: 10px; left: 10px; }
+body.big-1 .rtile-ic .ic { width: 19px; height: 19px; }
+body.big-2 .ring-wrap { width: 126px; height: 126px; }
+body.big-2 .ring-mid b { font-size: 2.2rem; }
+body.big-2 .rtile { padding: 22px 10px; }
+body.big-2 .hero-next { padding: 24px 20px 24px 22px; }
+body.big-2 .rtile-name { font-size: 1.05rem; }
 </style>
 </head>
 <body>
@@ -2163,7 +2186,7 @@ body.fit-3 .cal-legend { display: none; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122220040";
+    const BUILD = "20261122220608";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2209,25 +2232,35 @@ body.fit-3 .cal-legend { display: none; }
   ["fFrom", "fTo"].forEach((id) => $(id).addEventListener("input", updateForm));
 
   /* ---------- Fit on one screen ---------- */
+  // Inici fills the phone screen: bigger when there is room, tighter when there isn't.
   (function () {
     let raf = 0;
-    const LEVELS = ["fit-1", "fit-2", "fit-3"];
+    const SHRINK = ["fit-1", "fit-2", "fit-3"];
+    const GROW = ["big-1", "big-2"];
+    const fits = () => document.documentElement.scrollHeight <= window.innerHeight + 1;
     const fit = () => {
       raf = 0;
       const b = document.body;
-      b.classList.remove(...LEVELS);
+      b.classList.remove(...SHRINK, ...GROW);
       if (b.dataset.tab !== "inici" || window.innerWidth > 760) return;
       if (!$("haveForm").hidden) return;
-      for (const c of LEVELS) {
-        if (document.documentElement.scrollHeight <= window.innerHeight + 1) break;
-        b.classList.add(c);
+      if (fits()) {
+        for (const c of GROW) { b.classList.add(c); if (!fits()) { b.classList.remove(c); break; } }
+      } else {
+        for (const c of SHRINK) { b.classList.add(c); if (fits()) break; }
       }
     };
     const ask = () => { if (!raf) raf = requestAnimationFrame(fit); };
     new MutationObserver(ask).observe(document.body, { attributes: true, attributeFilter: ["data-tab"] });
-    if (window.ResizeObserver) new ResizeObserver(ask).observe(document.querySelector("main"));
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(ask);
+      ro.observe(document.querySelector("main"));
+      const home = $("h1s") && $("h1s").closest("section"); if (home) ro.observe(home);
+    }
     window.addEventListener("resize", ask);
-    setTimeout(ask, 0);
+    window.addEventListener("load", ask);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ask);
+    setTimeout(ask, 0); setTimeout(ask, 800);
   })();
 
   /* ---------- Start ---------- */
