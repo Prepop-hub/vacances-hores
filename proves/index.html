@@ -797,6 +797,12 @@ body.big-2 .ring-mid b { font-size: 2.2rem; }
 body.big-2 .rtile { padding: 22px 10px; }
 body.big-2 .hero-next { padding: 24px 20px 24px 22px; }
 body.big-2 .rtile-name { font-size: 1.05rem; }
+body.stretch .ring-wrap { width: var(--ring, 92px); height: var(--ring, 92px); }
+body.stretch .ring-mid b { font-size: calc(var(--ring, 92px) * 0.26); }
+body.stretch .ring-mid small { font-size: calc(var(--ring, 92px) * 0.085 + 2px); }
+body.stretch .rtile { align-content: center; gap: 8px; }
+body.stretch .rtile-name { font-size: 1rem; }
+body.stretch .rtile-leg { font-size: 0.8rem; }
 </style>
 </head>
 <body>
@@ -2186,7 +2192,7 @@ body.big-2 .rtile-name { font-size: 1.05rem; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122220718";
+    const BUILD = "20261122220816";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2246,14 +2252,25 @@ body.big-2 .rtile-name { font-size: 1.05rem; }
     const fit = () => {
       raf = 0;
       const b = document.body;
-      b.classList.remove(...SHRINK, ...GROW);
+      const grid = $("bigCards");
+      b.classList.remove(...SHRINK, ...GROW, "stretch");
+      if (grid) grid.style.minHeight = "";
+      b.style.removeProperty("--ring");
       if (b.dataset.tab !== "inici" || window.innerWidth > 760) return;
       if (!$("haveForm").hidden) return;
-      if (fits()) {
-        for (const c of GROW) { b.classList.add(c); if (!fits()) { b.classList.remove(c); break; } }
-      } else {
-        for (const c of SHRINK) { b.classList.add(c); if (fits()) break; }
-      }
+      if (!fits()) { for (const c of SHRINK) { b.classList.add(c); if (fits()) break; } return; }
+      // Room left: the tiles grow to fill the screen down to the tab bar.
+      const tb = document.querySelector(".tabbar");
+      if (!grid || grid.hidden || !tb || !grid.children.length) return;
+      const spare = tb.getBoundingClientRect().top - 12 - grid.getBoundingClientRect().bottom;
+      if (spare < 8) return;
+      const rows = Math.ceil(grid.children.length / 2);
+      const ring = Math.round(Math.min(150, 92 + (spare / rows) * 0.55));
+      b.classList.add("stretch");
+      b.style.setProperty("--ring", ring + "px");
+      grid.style.minHeight = (grid.getBoundingClientRect().height + spare) + "px";
+      // If the bigger rings made it overflow, step back.
+      if (!fits()) { const r2 = Math.max(92, ring - Math.ceil((grid.getBoundingClientRect().bottom - tb.getBoundingClientRect().top + 12) / rows)); b.style.setProperty("--ring", r2 + "px"); grid.style.minHeight = ""; const sp2 = tb.getBoundingClientRect().top - 12 - grid.getBoundingClientRect().bottom; if (sp2 > 0) grid.style.minHeight = (grid.getBoundingClientRect().height + sp2) + "px"; }
     };
     const ask = () => { if (!raf) raf = requestAnimationFrame(fit); };
     new MutationObserver(ask).observe(document.body, { attributes: true, attributeFilter: ["data-tab"] });
