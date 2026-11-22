@@ -672,7 +672,7 @@ main.slide-r { animation: slideR .22s ease-out; }
 .brow-years { gap: 2px 12px !important; }
 .yr-pill { font-size: 0.82rem; }
 .greet b { font-size: 1.15rem; }
-body[data-tab="inici"] main { padding-bottom: 96px; }
+body[data-tab="inici"] main { padding-bottom: 0; }
 .menu-item { width: 100%; justify-content: flex-start; display: flex; align-items: center; gap: 8px; text-align: left; border-radius: 12px; font-weight: 700; margin-bottom: 6px; }
 .menu-item .ic { color: var(--accent); }
 .fab-menu { position: fixed; right: 16px; bottom: calc(158px + env(safe-area-inset-bottom, 0px)); z-index: 55; display: grid; gap: 8px; justify-items: end; }
@@ -724,7 +724,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
 }
 /* ---------- Fit on one screen (phones) ---------- */
 body.fit-1 .wrap { gap: 12px; }
-body.fit-1[data-tab="inici"] main { padding-bottom: 80px; }
+
 body.fit-1[data-tab="inici"] .home-sec { gap: 8px !important; }
 body.fit-1 .hero-next { padding: 10px 12px 10px 14px; border-radius: 18px; }
 body.fit-1 .hn-t { font-size: 1.08rem; }
@@ -734,7 +734,8 @@ body.fit-1 .ring-grid { gap: 8px; }
 body.fit-1 .rtile { padding: 8px 6px; gap: 3px; border-radius: 16px; }
 body.fit-1 .ring-wrap { width: 70px; height: 70px; }
 body.fit-1 .ring-mid b { font-size: 1.3rem; }
-body.fit-2 #balTitle { display: none; }
+body.fit-2 #balTitle .sec-t { display: none; }
+body.fit-2 #balTitle { justify-content: flex-end; }
 body.fit-2 .greet { display: none; }
 body.fit-2 .ring-wrap { width: 58px; height: 58px; }
 body.fit-2 .ring-bg, body.fit-2 .ring-seg { stroke-width: 10; }
@@ -774,6 +775,43 @@ body.fit-3 .cal-legend { display: none; }
 .range-f input { width: 7.2em; padding: 8px 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; }
 .range-h { font-weight: 800; color: var(--accent); }
 .range-h.bad { color: var(--bad); }
+/* Inici: use the room on tall phones */
+.ring-grid { grid-auto-rows: 1fr; }
+body.big-1 .home-sec { gap: 14px !important; }
+body.big-1 .greet b { font-size: 1.45rem; }
+body.big-1 .hero-next { padding: 20px 18px 20px 20px; border-radius: 24px; }
+body.big-1 .hn-t { font-size: 1.4rem; }
+body.big-1 .hn-s { font-size: 0.95rem; }
+body.big-1 .hn-badge { width: 84px; height: 84px; }
+body.big-1 .hn-badge b { font-size: 1.9rem; }
+body.big-1 .ring-grid { gap: 12px; }
+body.big-1 .rtile { padding: 16px 10px; gap: 8px; border-radius: 22px; align-content: center; }
+body.big-1 .ring-wrap { width: 108px; height: 108px; }
+body.big-1 .ring-mid b { font-size: 1.9rem; }
+body.big-1 .ring-mid small { font-size: 0.8rem; }
+body.big-1 .rtile-name { font-size: 1rem; }
+body.big-1 .rtile-leg { font-size: 0.82rem; gap: 2px; }
+body.big-1 .rtile-ic { width: 34px; height: 34px; top: 10px; left: 10px; }
+body.big-1 .rtile-ic .ic { width: 19px; height: 19px; }
+body.big-2 .ring-wrap { width: 126px; height: 126px; }
+body.big-2 .ring-mid b { font-size: 2.2rem; }
+body.big-2 .rtile { padding: 22px 10px; }
+body.big-2 .hero-next { padding: 24px 20px 24px 22px; }
+body.big-2 .rtile-name { font-size: 1.05rem; }
+body.stretch .ring-wrap { width: var(--ring, 92px); height: var(--ring, 92px); }
+body.stretch .ring-mid b { font-size: calc(var(--ring, 92px) * 0.26); }
+body.stretch .ring-mid small { font-size: calc(var(--ring, 92px) * 0.085 + 2px); }
+body.stretch .rtile { align-content: center; gap: 8px; }
+/* Inici: no floating + (it would cover a tile); two small buttons next to the title instead. */
+body[data-tab="inici"] #fab { display: none !important; }
+.bal-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: -4px; }
+.bal-head .sec-t { margin: 0; }
+.bal-acts { display: flex; gap: 6px; }
+.bal-act { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--accent); color: var(--accent); background: var(--accent-soft); border-radius: 999px; padding: 5px 11px; font: inherit; font-size: 0.82rem; font-weight: 800; cursor: pointer; }
+.bal-act .ic { width: 15px; height: 15px; }
+.bal-act.main { background: var(--accent); color: var(--accent-ink); }
+body.stretch .rtile-name { font-size: 1rem; }
+body.stretch .rtile-leg { font-size: 0.8rem; }
 </style>
 </head>
 <body>
@@ -2163,7 +2201,7 @@ body.fit-3 .cal-legend { display: none; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122220143";
+    const BUILD = "20261122221455";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2209,25 +2247,70 @@ body.fit-3 .cal-legend { display: none; }
   ["fFrom", "fTo"].forEach((id) => $(id).addEventListener("input", updateForm));
 
   /* ---------- Fit on one screen ---------- */
+  // Inici fills the phone screen: bigger when there is room, tighter when there isn't.
   (function () {
     let raf = 0;
-    const LEVELS = ["fit-1", "fit-2", "fit-3"];
+    const SHRINK = ["fit-1", "fit-2", "fit-3"];
+    const GROW = ["big-1", "big-2"];
+    const fits = () => {
+      const last = $("bigCards"), tb = document.querySelector(".tabbar");
+      if (!last || !tb) return document.documentElement.scrollHeight <= window.innerHeight + 1;
+      const bottom = (last.hidden ? last.previousElementSibling || last : last).getBoundingClientRect().bottom;
+      return bottom + window.scrollY <= tb.getBoundingClientRect().top + window.scrollY - 10 && document.documentElement.scrollHeight <= window.innerHeight + 1;
+    };
     const fit = () => {
       raf = 0;
       const b = document.body;
-      b.classList.remove(...LEVELS);
+      const grid = $("bigCards");
+      b.classList.remove(...SHRINK, ...GROW, "stretch");
+      if (grid) grid.style.minHeight = "";
+      b.style.removeProperty("--ring");
       if (b.dataset.tab !== "inici" || window.innerWidth > 760) return;
       if (!$("haveForm").hidden) return;
-      for (const c of LEVELS) {
-        if (document.documentElement.scrollHeight <= window.innerHeight + 1) break;
-        b.classList.add(c);
+      if (!fits()) {
+        for (const c of SHRINK) { b.classList.add(c); if (fits()) break; }
+        // Smaller now: let the tiles take whatever room is left.
+        const tb0 = document.querySelector(".tabbar");
+        if (grid && !grid.hidden && tb0 && fits()) {
+          const free = Math.min(tb0.getBoundingClientRect().top - 12 - grid.getBoundingClientRect().bottom, window.innerHeight - document.documentElement.offsetHeight - 1);
+          if (free > 0) grid.style.minHeight = (grid.getBoundingClientRect().height + free) + "px";
+        }
+        return;
+      }
+      // Room left: the tiles grow to fill the screen down to the tab bar.
+      const tb = document.querySelector(".tabbar");
+      if (!grid || grid.hidden || !tb || !grid.children.length) return;
+      // Room before the tab bar, and before the page would start to scroll.
+      // Stop above the + button so it never covers a tile.
+      const fab = $("fab");
+      const limit = () => tb.getBoundingClientRect().top - 12;
+      const spare = Math.min(limit() - grid.getBoundingClientRect().bottom, window.innerHeight - document.documentElement.offsetHeight - 1);
+      if (spare < 8) return;
+      const rows = Math.ceil(grid.children.length / 2);
+      const ring = Math.round(Math.min(150, 92 + (spare / rows) * 0.55));
+      b.classList.add("stretch");
+      let ringPx = ring;
+      b.style.setProperty("--ring", ringPx + "px");
+      for (let i = 0; i < 6; i++) {
+        grid.style.minHeight = "";
+        const free = Math.min(limit() - grid.getBoundingClientRect().bottom, window.innerHeight - document.documentElement.offsetHeight - 1);
+        if (free >= 0) { grid.style.minHeight = (grid.getBoundingClientRect().height + free) + "px"; break; }
+        ringPx -= Math.ceil(-free / rows) + 2;
+        if (ringPx < 84) { b.classList.remove("stretch"); b.style.removeProperty("--ring"); break; }
+        b.style.setProperty("--ring", ringPx + "px");
       }
     };
     const ask = () => { if (!raf) raf = requestAnimationFrame(fit); };
     new MutationObserver(ask).observe(document.body, { attributes: true, attributeFilter: ["data-tab"] });
-    if (window.ResizeObserver) new ResizeObserver(ask).observe(document.querySelector("main"));
+    if (window.ResizeObserver) {
+      const ro = new ResizeObserver(ask);
+      ro.observe(document.querySelector("main"));
+      const home = $("h1s") && $("h1s").closest("section"); if (home) ro.observe(home);
+    }
     window.addEventListener("resize", ask);
-    setTimeout(ask, 0);
+    window.addEventListener("load", ask);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(ask);
+    setTimeout(ask, 0); setTimeout(ask, 800);
   })();
 
   /* ---------- Start ---------- */
@@ -2452,8 +2535,15 @@ body.fit-3 .cal-legend { display: none; }
     const greet = el("div", "greet"); greet.id = "greet";
     const nextDay = el("button", "next"); nextDay.type = "button"; nextDay.id = "nextDay"; nextDay.hidden = true;
     sec.querySelector(".step-head").after(greet, nextDay);
-    const balTitle = el("div", "sec-t", "El que et queda"); balTitle.id = "balTitle";
+    const balTitle = el("div", "bal-head"); balTitle.id = "balTitle";
+    const actDay = el("button", "bal-act main"); actDay.type = "button"; actDay.append(icon("plus"), document.createTextNode("Dia"));
+    actDay.title = "Apunta un dia de festa";
+    const actHours = el("button", "bal-act"); actHours.type = "button"; actHours.append(icon("plus"), document.createTextNode("Hores guanyades"));
+    const acts = el("div", "bal-acts"); acts.append(actDay, actHours);
+    balTitle.append(el("div", "sec-t", "El que et queda"), acts);
     $("bigCards").before(balTitle);
+    actDay.addEventListener("click", () => { resetForm(); showTab("apuntar"); });
+    actHours.addEventListener("click", () => openEarn());
     const actRow = el("div", "act-row"); actRow.append($("haveBtn"), earnBtn);
     $("bigCards").after(actRow);
     actRow.after($("haveForm"));
