@@ -619,6 +619,30 @@ main.slide-r { animation: slideR .22s ease-out; }
   .brow { padding: 8px 12px; }
   .brow-val b { font-size: 1.4rem; }
 }
+/* Cards: cleaner look */
+.list .entry.dcard, .list .entry.gcard { background: var(--surface) !important; border: 1px solid var(--line) !important; border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+.list .entry.dcard.short { border-color: var(--bad) !important; background: var(--bad-bg) !important; }
+.list .entry.past { opacity: .72; }
+.dcard { grid-template-columns: 54px minmax(0, 1fr) !important; }
+.dcard .dbox { border: 1.5px solid var(--line); border-radius: 10px; }
+.dcard .dbox-m { font-size: 0.66rem; }
+.dcard .dbox-d { font-size: 1.4rem; }
+.dhead { gap: 6px 8px; }
+.dwd { font-size: 1rem; }
+.dhead .pill { font-size: 0.75rem; padding: 1px 8px; color: var(--muted); }
+.drows { gap: 2px; }
+.drow { background: none !important; border: 0 !important; padding: 2px 0 !important; border-radius: 0; }
+.drow-n { font-weight: 600; }
+.drow .tile-y, .gcard .tile-y { background: none; color: var(--bag); padding: 0; margin-left: 2px; font-size: 0.8rem; font-weight: 800; }
+.drow-v { font-size: 0.95rem; }
+.list .entry.dcard .dacts { border-top: 1px solid var(--line); padding-top: 6px; margin-top: 2px; gap: 4px; }
+.dacts .btn.small, .gcard .row-actions .btn.small { border: 0; background: transparent; font-weight: 700; padding: 6px 4px; border-radius: 8px; }
+.dacts .btn.small:hover, .gcard .row-actions .btn.small:hover { background: var(--surface-2); }
+.dacts .btn.small:not(.mail):not(.danger) { color: var(--ink); }
+.gcard { border-left: 4px solid var(--bag) !important; }
+.gcard .g-amt { font-size: 1rem; }
+.gcard .row-actions { border-top: 1px solid var(--line); padding-top: 4px; }
+.list .dsec { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.07em; padding-top: 8px; }
 </style>
 </head>
 <body>
@@ -1578,8 +1602,9 @@ main.slide-r { animation: slideR .22s ease-out; }
 
     const body = el("div", "dbody");
     const head = el("div", "dhead");
-    const wd = d ? d.toLocaleDateString("ca-ES", { weekday: "long" }) : "Sense data";
+    const wd = d ? d.toLocaleDateString("ca-ES", { weekday: "long", day: "numeric", month: "long" }) : "Sense data";
     head.append(el("b", "dwd", wd.charAt(0).toUpperCase() + wd.slice(1)), el("span", "pill", durLabel(e)));
+    if (e.date && e.date < today()) li.classList.add("past");
     const hol = d ? holidayOf(e.date) : null;
     body.append(head);
     if (hol) body.append(el("div", "dhol", `Festiu: ${hol}`));
@@ -1904,7 +1929,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122121501";
+    const BUILD = "20261122121815";
     const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
