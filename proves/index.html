@@ -1904,7 +1904,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122121314";
+    const BUILD = "20261122121417";
     const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
