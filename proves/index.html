@@ -664,19 +664,13 @@ main.slide-r { animation: slideR .22s ease-out; }
 .ver-line { margin: 8px 2px 0; color: var(--muted); font-size: 0.8rem; text-align: center; }
 /* Inici, simpler */
 .home-hide { display: none !important; }
-.brow { cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.brow .brow-years, .brow .brow-bar { display: none; }
-.brow.open .brow-years { display: flex; }
-.brow.open .brow-bar { display: block; }
-.brow:not(.open) .brow-val { grid-row: 1 !important; }
-.brow:not(.open) .brow-ic { grid-row: 1 !important; }
-.brow { align-items: center; row-gap: 6px !important; }
-.brow-name { display: flex; align-items: center; gap: 6px; }
-.brow-val::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg) translateY(-3px); transition: transform .15s; }
-.brow.open .brow-val::after { transform: rotate(-135deg) translateY(-1px); }
+.brow-bar { display: none !important; }
+.brow { align-items: center; row-gap: 3px !important; padding-top: 11px !important; padding-bottom: 11px !important; }
 .brow-val { white-space: nowrap; }
 .brow-val b { display: inline !important; }
 .brow-val small { margin-left: 4px; }
+.brow-years { gap: 2px 12px !important; }
+.yr-pill { font-size: 0.82rem; }
 .greet b { font-size: 1.15rem; }
 body[data-tab="inici"] main { padding-bottom: 96px; }
 .menu-item { width: 100%; justify-content: flex-start; display: flex; align-items: center; gap: 8px; text-align: left; border-radius: 12px; font-weight: 700; margin-bottom: 6px; }
@@ -1205,12 +1199,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     list.replaceChildren(...bags.map((b) => {
       const parts = ys.filter((y) => dispOf(y, b.k) != null).map((y) => ({ y, had: dispOf(y, b.k), left: dispOf(y, b.k) - spentBy[y][b.k] }));
       const left = parts.reduce((a, x) => a + x.left, 0);
-      const row = el("div", "brow"); row.setAttribute("role", "button"); row.tabIndex = 0;
-      if (openRows.has(b.k)) row.classList.add("open");
-      row.setAttribute("aria-expanded", openRows.has(b.k) ? "true" : "false");
-      const toggle = () => { if (openRows.has(b.k)) openRows.delete(b.k); else openRows.add(b.k); const o = openRows.has(b.k); row.classList.toggle("open", o); row.setAttribute("aria-expanded", o ? "true" : "false"); };
-      row.addEventListener("click", toggle);
-      row.addEventListener("keydown", (ev) => { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); toggle(); } });
+      const row = el("div", "brow");
       const had = parts.reduce((a, x) => a + x.had, 0);
       const ic = el("span", "brow-ic"); ic.append(icon("b_" + b.k));
       const name = el("div", "brow-name", b.name);
@@ -2015,7 +2004,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122213916";
+    const BUILD = "20261122214126";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
