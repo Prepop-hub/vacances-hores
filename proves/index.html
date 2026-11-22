@@ -801,6 +801,9 @@ body.stretch .ring-wrap { width: var(--ring, 92px); height: var(--ring, 92px); }
 body.stretch .ring-mid b { font-size: calc(var(--ring, 92px) * 0.26); }
 body.stretch .ring-mid small { font-size: calc(var(--ring, 92px) * 0.085 + 2px); }
 body.stretch .rtile { align-content: center; gap: 8px; }
+/* The + button sits over the bottom-right tile: keep its content above it. */
+body.stretch .ring-grid > .rtile:last-child { padding-bottom: 62px; }
+body.stretch .ring-grid > .rtile:nth-last-child(2):nth-child(odd) { padding-bottom: 62px; }
 body.stretch .rtile-name { font-size: 1rem; }
 body.stretch .rtile-leg { font-size: 0.8rem; }
 </style>
@@ -2192,7 +2195,7 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122221042";
+    const BUILD = "20261122221142";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2265,7 +2268,7 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
       // Room before the tab bar, and before the page would start to scroll.
       // Stop above the + button so it never covers a tile.
       const fab = $("fab");
-      const limit = () => Math.min(tb.getBoundingClientRect().top - 12, fab && !fab.hidden ? fab.getBoundingClientRect().top - 10 : Infinity);
+      const limit = () => tb.getBoundingClientRect().top - 12;
       const spare = Math.min(limit() - grid.getBoundingClientRect().bottom, window.innerHeight - document.documentElement.offsetHeight - 1);
       if (spare < 8) return;
       const rows = Math.ceil(grid.children.length / 2);
