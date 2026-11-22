@@ -1270,7 +1270,8 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
       mid.append(el("b", null, fmt(left)), el("small", null, unitWord(b, left)));
       wrap.append(svg, mid);
       const ic = el("span", "rtile-ic"); ic.append(icon("b_" + b.k));
-      const name = el("div", "rtile-name", MOTIU[b.k] || b.name);
+      const TILE_NAME = { vac: "Vacances", ap: "Assumptes personals (AP)", cf: "Compensació de festius (CF)", form: "Formació", hex: "Hores extres" };
+      const name = el("div", "rtile-name", TILE_NAME[b.k] || b.name);
       name.title = b.name;
       const leg = el("div", "rtile-leg num");
       parts.forEach((x) => {
@@ -2073,7 +2074,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122214905";
+    const BUILD = "20261122215001";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
