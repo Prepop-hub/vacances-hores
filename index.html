@@ -577,7 +577,7 @@ main.slide-r { animation: slideR .22s ease-out; }
 @media (max-width: 520px) { body[data-tab="inici"] .earn-btn { padding: 7px 12px; font-size: 0.9rem; } }
 /* One colour per year */
 .yblock { border-left: 4px solid var(--bag); padding-left: 10px; }
-.yblock-h { color: var(--bag); }
+.yblock-h { background: var(--bag) !important; color: var(--surface) !important; }
 .byr { background: var(--bagbg); border-radius: 8px; }
 .year-btn[aria-pressed="true"] { background: var(--bag) !important; border-color: var(--bag) !important; color: var(--surface) !important; }
 .year-btn { border-color: var(--bag) !important; }
@@ -662,6 +662,66 @@ main.slide-r { animation: slideR .22s ease-out; }
 .btn.small.ren { border-color: var(--warn, #b7791f); color: var(--warn, #b7791f); }
 .ren-note { margin: 0; background: var(--warn-bg, #fdf3e1); color: var(--warn, #8a5a00); border-radius: 10px; padding: 8px 12px; font-size: 0.9rem; font-weight: 600; }
 .ver-line { margin: 8px 2px 0; color: var(--muted); font-size: 0.8rem; text-align: center; }
+/* Inici, simpler */
+.home-hide { display: none !important; }
+.brow-bar { display: none !important; }
+.brow { align-items: center; row-gap: 3px !important; padding-top: 11px !important; padding-bottom: 11px !important; }
+.brow-val { white-space: nowrap; }
+.brow-val b { display: inline !important; }
+.brow-val small { margin-left: 4px; }
+.brow-years { gap: 2px 12px !important; }
+.yr-pill { font-size: 0.82rem; }
+.greet b { font-size: 1.15rem; }
+body[data-tab="inici"] main { padding-bottom: 96px; }
+.menu-item { width: 100%; justify-content: flex-start; display: flex; align-items: center; gap: 8px; text-align: left; border-radius: 12px; font-weight: 700; margin-bottom: 6px; }
+.menu-item .ic { color: var(--accent); }
+.fab-menu { position: fixed; right: 16px; bottom: calc(158px + env(safe-area-inset-bottom, 0px)); z-index: 55; display: grid; gap: 8px; justify-items: end; }
+.fab-opt { display: flex; align-items: center; gap: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font: inherit; font-weight: 700; border-radius: 999px; padding: 11px 16px; box-shadow: 0 6px 18px rgba(0,0,0,.18); cursor: pointer; }
+.fab-opt .ic { color: var(--accent); }
+.fab.open { transform: rotate(45deg); }
+.fab { transition: transform .15s; }
+/* ---------- Inici, new look ---------- */
+.hero-next { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; font: inherit; border: 0; cursor: pointer; color: #fff; border-radius: 22px; padding: 16px 16px 16px 18px; background: radial-gradient(120% 140% at 100% 0%, #26b39f 0%, #0e6e63 55%, #0a4f47 100%); box-shadow: 0 10px 26px rgba(14, 110, 99, .35); position: relative; overflow: hidden; }
+.hero-next::after { content: ""; position: absolute; right: -40px; bottom: -60px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,.07); }
+.hn-txt { display: grid; gap: 2px; flex: 1; min-width: 0; position: relative; z-index: 1; }
+.hn-k { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.09em; font-weight: 800; opacity: .8; }
+.hn-t { font-size: 1.25rem; line-height: 1.15; }
+.hn-s { font-size: 0.85rem; opacity: .85; }
+.hn-badge { position: relative; z-index: 1; flex: none; width: 74px; height: 74px; border-radius: 50%; background: rgba(255,255,255,.16); border: 2px solid rgba(255,255,255,.45); display: grid; place-content: center; text-align: center; line-height: 1.05; }
+.hn-badge b { font-size: 1.6rem; font-weight: 800; }
+.hn-badge small { font-size: 0.66rem; text-transform: uppercase; letter-spacing: .06em; opacity: .85; }
+.hn-badge .ic { width: 30px; height: 30px; }
+.ring-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.rtile { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 12px 12px 12px; display: grid; justify-items: center; gap: 6px; box-shadow: 0 2px 10px rgba(10, 40, 36, .06); text-align: center; min-width: 0; }
+.ring-wrap { position: relative; width: 92px; height: 92px; }
+.ring { width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--line); stroke-width: 9; }
+.ring-seg { fill: none; stroke: var(--bag); stroke-width: 9; stroke-linecap: round; }
+.ring-neg { stroke: var(--bad); }
+.ring-mid { position: absolute; inset: 0; display: grid; place-content: center; line-height: 1; }
+.ring-mid b { font-size: 1.55rem; font-weight: 800; letter-spacing: -0.02em; }
+.ring-mid small { font-size: 0.7rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+.rtile.neg .ring-mid b { color: var(--bad); }
+.rtile.zero .ring-mid b { color: var(--muted); }
+.rtile-name { display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 800; font-size: 0.92rem; min-width: 0; text-align: center; line-height: 1.2; }
+.rtile { position: relative; }
+.rtile-ic { position: absolute; top: 9px; left: 9px; width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; color: var(--accent); background: var(--accent-soft); }
+.rtile-ic .ic { width: 17px; height: 17px; }
+.rtile-leg { display: grid; gap: 1px; font-size: 0.74rem; color: var(--muted); }
+.rleg { display: inline-flex; align-items: center; justify-content: center; gap: 4px; white-space: nowrap; }
+.rleg i { width: 8px; height: 8px; border-radius: 50%; background: var(--bag); }
+.rleg b { color: var(--ink); }
+.rleg.neg b { color: var(--bad); }
+.rtile-alert { color: var(--bad); font-weight: 800; font-size: 0.78rem; }
+.rtile.neg { border-color: var(--bad); }
+.greet b { font-size: 1.3rem; letter-spacing: -0.01em; }
+#menuPanel details.spent { border: 1px solid var(--line); border-radius: 12px; padding: 0 12px; margin-bottom: 6px; }
+@media (max-width: 520px) {
+  .ring-wrap { width: 84px; height: 84px; }
+  .rtile { padding: 10px 8px; gap: 4px; }
+  .hero-next { padding: 14px 14px 14px 16px; }
+  .hn-badge { width: 66px; height: 66px; }
+}
 </style>
 </head>
 <body>
@@ -1099,7 +1159,7 @@ main.slide-r { animation: slideR .22s ease-out; }
       renderGreet(); renderNextDay();
       $("balTitle").hidden = true;
       $("bigCards").hidden = false; $("bigCards").className = "bal-empty";
-      $("bigCards").replaceChildren(el("div", "empty", "Encara no has posat res. Toca «El que tinc» per posar els dies i les hores que tens."));
+      $("bigCards").replaceChildren(el("div", "empty", "Encara no has posat els dies i hores que tens. Fes-ho des del menú ☰ → «Canvia el que tens de cada any»."));
       return;
     }
     const showTotal = ys.length > 1;
@@ -1174,33 +1234,55 @@ main.slide-r { animation: slideR .22s ease-out; }
     renderYearDetail(ys, bags, spentBy);
     $("detailBox").hidden = false;
     renderGreet(); renderNextDay();
-    const list = $("bigCards"); list.className = "bal-list";
+    const list = $("bigCards"); list.className = "ring-grid";
     $("balTitle").hidden = !bags.length;
     list.hidden = !bags.length;
+    const R = 34, C = 2 * Math.PI * R;
+    const NS = "http://www.w3.org/2000/svg";
     list.replaceChildren(...bags.map((b) => {
       const parts = ys.filter((y) => dispOf(y, b.k) != null).map((y) => ({ y, had: dispOf(y, b.k), left: dispOf(y, b.k) - spentBy[y][b.k] }));
-      const left = parts.reduce((a, x) => a + x.left, 0);
-      const row = el("div", "brow");
       const had = parts.reduce((a, x) => a + x.had, 0);
-      const ic = el("span", "brow-ic"); ic.append(icon("b_" + b.k));
-      const name = el("div", "brow-name", b.name);
-      const yrs = el("div", "brow-years num");
+      const left = parts.reduce((a, x) => a + x.left, 0);
+      const tile = el("div", "rtile");
+      if (left < -1e-9) tile.classList.add("neg"); else if (Math.abs(left) < 1e-9) tile.classList.add("zero");
+      // Ring: one coloured piece per year for what is left; the grey part is what you have used.
+      const wrap = el("div", "ring-wrap");
+      const svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", "0 0 80 80"); svg.setAttribute("class", "ring"); svg.setAttribute("aria-hidden", "true");
+      const bg = document.createElementNS(NS, "circle"); bg.setAttribute("cx", "40"); bg.setAttribute("cy", "40"); bg.setAttribute("r", String(R)); bg.setAttribute("class", "ring-bg");
+      svg.append(bg);
+      let acc = 0;
+      if (left < -1e-9) {
+        const c = document.createElementNS(NS, "circle"); c.setAttribute("cx", "40"); c.setAttribute("cy", "40"); c.setAttribute("r", String(R)); c.setAttribute("class", "ring-seg ring-neg");
+        c.setAttribute("stroke-dasharray", `${C} ${C}`); svg.append(c);
+      } else if (had > 0) {
+        parts.forEach((x) => {
+          if (!(x.left > 1e-9)) return;
+          const f = Math.min(1 - acc, x.left / had);
+          const c = document.createElementNS(NS, "circle"); c.setAttribute("cx", "40"); c.setAttribute("cy", "40"); c.setAttribute("r", String(R)); c.setAttribute("class", "ring-seg");
+          yearStyle(c, x.y);
+          c.setAttribute("stroke-dasharray", `${Math.max(0, f * C - 2)} ${C}`);
+          c.setAttribute("stroke-dashoffset", String(-acc * C));
+          svg.append(c);
+          acc += f;
+        });
+      }
+      const mid = el("div", "ring-mid num");
+      mid.append(el("b", null, fmt(left)), el("small", null, unitWord(b, left)));
+      wrap.append(svg, mid);
+      const ic = el("span", "rtile-ic"); ic.append(icon("b_" + b.k));
+      const TILE_NAME = { vac: "Vacances", ap: "Assumptes personals (AP)", cf: "Compensació de festius (CF)", form: "Formació", hex: "Hores extres" };
+      const name = el("div", "rtile-name", TILE_NAME[b.k] || b.name);
+      name.title = b.name;
+      const leg = el("div", "rtile-leg num");
       parts.forEach((x) => {
-        const pill = el("span", "yr-pill"); yearStyle(pill, x.y);
-        if (x.left < -1e-9) pill.classList.add("neg");
-        pill.append(el("i"), document.createTextNode(`${x.y}: `), el("b", null, fmt(x.left)), document.createTextNode(` de ${fmt(x.had)}`));
-        pill.title = `${x.y}: et queden ${fmt(x.left)} de ${fmt(x.had)} ${unitWord(b, x.had)}`;
-        yrs.append(pill);
+        const r = el("span", "rleg"); yearStyle(r, x.y);
+        if (x.left < -1e-9) r.classList.add("neg");
+        r.append(el("i"), document.createTextNode(`${x.y}: `), el("b", null, fmt(x.left)), document.createTextNode(` de ${fmt(x.had)}`));
+        leg.append(r);
       });
-      const val = el("div", "brow-val num");
-      val.append(el("b", null, fmt(left)), el("small", null, unitWord(b, left)));
-      const bar = el("div", "brow-bar"); const fill = el("i");
-      fill.style.width = (left < 0 ? 100 : had > 0 ? Math.max(0, Math.min(100, (left / had) * 100)) : 0) + "%";
-      bar.append(fill);
-      row.append(ic, name, val, yrs, bar);
-      if (left < -1e-9) { row.classList.add("neg"); row.append(el("div", "brow-alert", `⚠ T'has passat ${fmt(-left)} ${unitWord(b, -left)}`)); }
-      else if (Math.abs(left) < 1e-9) row.classList.add("zero");
-      return row;
+      tile.append(ic, wrap, name, leg);
+      if (left < -1e-9) tile.append(el("div", "rtile-alert", `T'has passat ${fmt(-left)}`));
+      return tile;
     }));
   }
   function renderGreet() {
@@ -1210,26 +1292,34 @@ main.slide-r { animation: slideR .22s ease-out; }
     const hi = h < 14 ? "Bon dia" : h < 20 ? "Bona tarda" : "Bon vespre";
     const nom = (typeof cfg !== "undefined" && cfg.nom) ? cfg.nom.trim().split(/\s+/)[0] : "";
     const dt = now.toLocaleDateString("ca-ES", { weekday: "long", day: "numeric", month: "long" });
-    g.replaceChildren(el("b", null, nom ? `${hi}, ${nom}` : hi), el("span", null, dt.charAt(0).toUpperCase() + dt.slice(1)));
+    g.replaceChildren(el("b", null, nom ? `${hi}, ${nom}` : hi));
+    g.title = dt;
   }
   function renderNextDay() {
     const box = $("nextDay"); if (!box) return;
+    box.className = "hero-next"; box.hidden = false;
     const todayIso = today();
     const next = allEntries.filter((e) => e.date && e.date >= todayIso).sort((a, b) => a.date.localeCompare(b.date) || num(a.createdAt) - num(b.createdAt))[0];
-    if (!next) { box.hidden = true; return; }
-    box.hidden = false;
+    if (!next) {
+      const txt = el("span", "hn-txt");
+      txt.append(el("span", "hn-k", "El teu pròxim dia"), el("b", "hn-t", "Encara no en tens cap"), el("span", "hn-s", "Toca aquí per apuntar-ne un"));
+      const badge = el("span", "hn-badge"); badge.append(icon("plus"));
+      box.replaceChildren(txt, badge);
+      box.onclick = () => { resetForm(); showTab("apuntar"); };
+      return;
+    }
     const d = new Date(next.date + "T12:00:00");
     const diff = Math.round((d - new Date(todayIso + "T12:00:00")) / 864e5);
-    const when = diff === 0 ? "Avui" : diff === 1 ? "Demà" : `D'aquí ${diff} dies`;
-    const dateBox = el("span", "dbox");
-    dateBox.append(el("span", "dbox-m", d.toLocaleDateString("ca-ES", { month: "short" }).replace(".", "")), el("span", "dbox-d num", String(d.getDate())));
-    const txt = el("span", "next-txt");
-    const wd = d.toLocaleDateString("ca-ES", { weekday: "long" });
+    const wd = d.toLocaleDateString("ca-ES", { weekday: "long", day: "numeric", month: "long" });
     const from = [];
     for (const y of yearsOf(next).slice().sort()) for (const b of BAGS) { const v = amountOf(next, y, b.k); if (v > 0) from.push(`${shortName[b.k]} ${y}`); }
-    const kick = el("span", "next-k"); kick.append(document.createTextNode("El teu pròxim dia"), el("span", "next-in", when));
-    txt.append(kick, el("b", null, `${wd.charAt(0).toUpperCase() + wd.slice(1)} · ${durLabel(next)}`), el("span", "next-s", from.join(" + ") || "Sense saldo triat"));
-    box.replaceChildren(dateBox, txt);
+    const txt = el("span", "hn-txt");
+    txt.append(el("span", "hn-k", "El teu pròxim dia"), el("b", "hn-t", wd.charAt(0).toUpperCase() + wd.slice(1)), el("span", "hn-s", `${durLabel(next)}${from.length ? " · " + from.join(" + ") : ""}`));
+    const badge = el("span", "hn-badge num");
+    if (diff === 0) badge.append(el("b", null, "Avui"));
+    else if (diff === 1) badge.append(el("b", null, "Demà"));
+    else badge.append(el("small", null, "falten"), el("b", null, String(diff)), el("small", null, "dies"));
+    box.replaceChildren(txt, badge);
     box.onclick = () => {
       showTab("dies");
       const li = $("entry_" + next.id);
@@ -1984,7 +2074,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122213320";
+    const BUILD = "20261122215051";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2165,7 +2255,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     if (changed) window.scrollTo({ top: 0 });
   }
   document.querySelectorAll(".tabbar .tab").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
-  $("fab").addEventListener("click", () => { resetForm(); showTab("apuntar"); });
+  $("fab").addEventListener("click", (ev) => { ev.stopPropagation(); if (window.__fabToggle) window.__fabToggle(); else { resetForm(); showTab("apuntar"); } });
   window.addEventListener("hashchange", () => showTab(location.hash.slice(1), true));
 
   // Swipe left/right with a finger to move between tabs, like a phone app.
@@ -2173,7 +2263,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     let sx = 0, sy = 0, st = 0, ok = false;
     const skip = (node) => {
       for (let n = node; n && n !== document.body; n = n.parentElement) {
-        if (n.matches && n.matches("input, textarea, select, [contenteditable], .menu-panel, .tabbar, .sheet-bg")) return true;
+        if (n.matches && n.matches("input, textarea, select, [contenteditable], .menu-panel, .tabbar, .sheet-bg, .fab-menu")) return true;
         const cs = getComputedStyle(n);
         if ((cs.overflowX === "auto" || cs.overflowX === "scroll") && n.scrollWidth > n.clientWidth + 2) return true;
       }
@@ -2255,6 +2345,30 @@ main.slide-r { animation: slideR .22s ease-out; }
     $("bigCards").after(actRow);
     actRow.after($("haveForm"));
     haveBtnBox.remove(); earnBox.remove();
+    // Inici stays simple: the two buttons move to the menu and to the + button.
+    actRow.hidden = true;
+    const menuItem = (ic, text, fn) => { const b = el("button", "btn menu-item"); b.type = "button"; b.append(icon(ic), document.createTextNode(" " + text)); b.addEventListener("click", fn); return b; };
+    const haveItem = menuItem("pencil", "Canvia el que tens de cada any", () => {
+      setMenu(false); showTab("inici"); openHave();
+      setTimeout(() => $("haveForm").scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+    });
+    const earnItem = menuItem("plus", "Afegeix hores guanyades", () => { setMenu(false); openEarn(); });
+    // "Detall per anys" lives in the menu now.
+    $("menuPanel").querySelector(".menu-head").after(haveItem, earnItem, $("detailBox"));
+    const fabMenu = el("div", "fab-menu"); fabMenu.hidden = true;
+    const optDay = el("button", "fab-opt"); optDay.type = "button";
+    optDay.append(icon("plus"), el("span", null, "Apunta un dia de festa"));
+    const optEarn = el("button", "fab-opt"); optEarn.type = "button";
+    optEarn.append(icon("b_hex"), el("span", null, "Afegeix hores guanyades"));
+    fabMenu.append(optDay, optEarn);
+    document.body.append(fabMenu);
+    const setFab = (open) => { fabMenu.hidden = !open; $("fab").classList.toggle("open", open); $("fab").setAttribute("aria-expanded", open ? "true" : "false"); };
+    window.__fabToggle = () => setFab(fabMenu.hidden);
+    optDay.addEventListener("click", () => { setFab(false); resetForm(); showTab("apuntar"); });
+    optEarn.addEventListener("click", () => { setFab(false); openEarn(); });
+    document.addEventListener("click", (ev) => { if (!fabMenu.hidden && !fabMenu.contains(ev.target)) setFab(false); });
+    document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") setFab(false); });
+    document.querySelectorAll(".tabbar .tab").forEach((b) => b.addEventListener("click", () => setFab(false)));
   }
   const G_KINDS = ["hex", "cf", "ap", "form"];
   let gKind = "hex", gYear = year, gYearTouched = false;
