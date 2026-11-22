@@ -577,7 +577,7 @@ main.slide-r { animation: slideR .22s ease-out; }
 @media (max-width: 520px) { body[data-tab="inici"] .earn-btn { padding: 7px 12px; font-size: 0.9rem; } }
 /* One colour per year */
 .yblock { border-left: 4px solid var(--bag); padding-left: 10px; }
-.yblock-h { color: var(--bag); }
+.yblock-h { background: var(--bag) !important; color: var(--surface) !important; }
 .byr { background: var(--bagbg); border-radius: 8px; }
 .year-btn[aria-pressed="true"] { background: var(--bag) !important; border-color: var(--bag) !important; color: var(--surface) !important; }
 .year-btn { border-color: var(--bag) !important; }
@@ -2072,7 +2072,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122214507";
+    const BUILD = "20261122214607";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
