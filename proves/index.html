@@ -1558,6 +1558,13 @@ body.fit-3 .cal-legend { display: none; }
           }
           if (v > 0) vals[s.id] = fmt(Math.round(v * 100) / 100);
         }
+      } else if (dur === "hores" && q > 1e-9 && s.b.k !== "vac") {
+        // "Unes hores" with a from-to time: fill the hours of that time.
+        const a = minutesOf($("fFrom").value), b = minutesOf($("fTo").value);
+        if (a != null && b != null && b > a) {
+          const need = (b - a) / 60 - hoursOf(slotTotals(clean));
+          if (need > 1e-9) vals[s.id] = fmt(Math.round(Math.min(need, q) * 100) / 100);
+        }
       }
     }
     renderPicked();
@@ -2156,7 +2163,7 @@ body.fit-3 .cal-legend { display: none; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122215937";
+    const BUILD = "20261122220040";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
