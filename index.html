@@ -656,6 +656,11 @@ main.slide-r { animation: slideR .22s ease-out; }
   .home-sec .next .dbox { width: 44px; }
   .home-sec .btn.act-btn { padding: 9px 6px; }
 }
+/* Renounce email */
+.list .entry.dcard .dacts { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+.list .entry.dcard .dacts.three { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+.btn.small.ren { border-color: var(--warn, #b7791f); color: var(--warn, #b7791f); }
+.ren-note { margin: 0; background: var(--warn-bg, #fdf3e1); color: var(--warn, #8a5a00); border-radius: 10px; padding: 8px 12px; font-size: 0.9rem; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -1667,7 +1672,12 @@ main.slide-r { animation: slideR .22s ease-out; }
       sync(); persist(); resetForm(); renderAll();
       toast("Dia esborrat");
     });
-    ra.append(mail, ed, del);
+    if (!(e.date && e.date < today())) {
+      const ren = el("button", "btn small mail ren"); ren.type = "button"; ren.append(icon("mail"), document.createTextNode(" Renuncia"));
+      ren.title = "Envia un correu per renunciar a aquest dia";
+      ren.addEventListener("click", () => openMail(e, "renuncia"));
+      ra.append(mail, ren, ed, del);
+    } else { ra.classList.add("three"); ra.append(mail, ed, del); }
 
     li.append(dateBox, body, ra);
     return li;
@@ -1825,7 +1835,8 @@ main.slide-r { animation: slideR .22s ease-out; }
   const MOTIU = { vac: "Vacances", ap: "Assumptes personals", cf: "Compensació de festius", form: "Formació", hex: "Hores extres" };
   function joinCa(list) { return list.length <= 1 ? list.join("") : list.slice(0, -1).join(", ") + " i " + list[list.length - 1]; }
   const lower1 = (s) => s.charAt(0).toLowerCase() + s.slice(1);
-  function buildMail(e) {
+  function buildMail(e, kind) {
+    const renounce = kind === "renuncia";
     const d = e.date ? new Date(e.date + "T12:00:00") : null;
     const dLong = d ? d.toLocaleDateString("ca-ES", { weekday: "long", day: "numeric", month: "long", year: "numeric" }) : "(data)";
     const dShort = d ? d.toLocaleDateString("ca-ES", { day: "2-digit", month: "2-digit", year: "numeric" }) : "[data]";
@@ -1843,9 +1854,19 @@ main.slide-r { animation: slideR .22s ease-out; }
       }
     }
     // Format requested by HR: Cognoms, Nom. Guàrdia/lloc de treball. Motiu. Data d'inici.
-    const subject = `${cfg.cognoms || "[Cognoms]"}, ${cfg.nom || "[Nom]"}. ${cfg.lloc || "[Guàrdia/lloc de treball]"}. ${motiuText}. ${dShort}.`;
+    const subject = `${cfg.cognoms || "[Cognoms]"}, ${cfg.nom || "[Nom]"}. ${cfg.lloc || "[Guàrdia/lloc de treball]"}. ${renounce ? "Renúncia a " + lower1(motiuText) : motiuText}. ${dShort}.`;
     const signName = [cfg.nom, cfg.cognoms].filter(Boolean).join(" ") || "[Nom i cognoms]";
-    const body = [
+    const body = (renounce ? [
+      "Bon dia,",
+      "",
+      `Us comunico que renuncio a gaudir del ${dLong}, ${durText}, que havia sol·licitat amb càrrec a:`,
+      "",
+      ...lines,
+      "",
+      "Us prego que aquestes hores es tornin a afegir al meu saldo.",
+      "",
+      "Moltes gràcies."
+    ] : [
       "Bon dia,",
       "",
       `Us sol·licito gaudir del ${dLong}, ${durText}, amb càrrec a:`,
@@ -1853,13 +1874,14 @@ main.slide-r { animation: slideR .22s ease-out; }
       ...lines,
       ...(e.notes ? ["", `Observacions: ${e.notes}`] : []),
       "",
-      "Moltes gràcies.",
+      "Moltes gràcies."
+    ]).concat([
       "",
       "Salutacions cordials,",
       signName,
       cfg.lloc || "[Guàrdia/lloc de treball]",
       ...(cfg.corp ? [cfg.corp] : [])
-    ].join("\n");
+    ]).join("\n");
     return { subject, body };
   }
   const ccAddr = () => ($("mCc").checked && cfg.corp ? cfg.corp : "");
@@ -1905,15 +1927,22 @@ main.slide-r { animation: slideR .22s ease-out; }
     }
     $("mCcAddr").textContent = cfg.corp ? `(${cfg.corp})` : "(posa'l a les teves dades)";
   }
-  let mailEntry = null;
+  let mailEntry = null, mailKind = "demana";
+  const MAIL_HINT = document.querySelector("#mailDlg .dlg-body > p.hint");
+  const MAIL_HINT_TEXT = MAIL_HINT ? MAIL_HINT.textContent : "";
+  const renNote = el("p", "ren-note"); renNote.hidden = true;
+  renNote.textContent = "Quan l'hagis enviat i t'ho confirmin, esborra aquest dia a «Els meus dies» perquè les hores tornin al teu saldo.";
+  if (MAIL_HINT) MAIL_HINT.after(renNote);
   function fillMail() {
-    const m = buildMail(mailEntry);
+    const m = buildMail(mailEntry, mailKind);
     $("mSubj").value = m.subject;
     $("mBody").value = m.body;
     refreshMailLink();
   }
-  function openMail(e) {
-    mailEntry = e;
+  function openMail(e, kind) {
+    mailEntry = e; mailKind = kind === "renuncia" ? "renuncia" : "demana";
+    $("mailTitle").textContent = mailKind === "renuncia" ? "Renuncia-hi per correu" : "Demana-ho per correu";
+    renNote.hidden = mailKind !== "renuncia";
     $("mTo").value = cfg.mail || DEFAULT_MAIL;
     $("mProfile").hidden = profileOk();
     fillProfileInputs();
@@ -1954,7 +1983,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122122115";
+    const BUILD = "20261122123738";
     const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
