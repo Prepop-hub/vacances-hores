@@ -619,6 +619,43 @@ main.slide-r { animation: slideR .22s ease-out; }
   .brow { padding: 8px 12px; }
   .brow-val b { font-size: 1.4rem; }
 }
+/* Inici: balance cards */
+.bal-list { border: 0 !important; background: none !important; overflow: visible !important; gap: 8px; }
+.brow { grid-template-columns: 40px minmax(0, 1fr) auto !important; background: var(--surface); border: 1px solid var(--line) !important; border-radius: 16px; padding: 10px 12px 10px 10px !important; box-shadow: 0 2px 8px rgba(10, 40, 36, .07); row-gap: 2px !important; }
+.brow-ic { grid-column: 1; grid-row: 1 / span 2; width: 38px; height: 38px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); align-self: center; }
+.brow-ic .ic { width: 22px; height: 22px; }
+.brow-name { grid-column: 2 !important; }
+.brow-years { grid-column: 2 !important; }
+.brow-val { grid-column: 3 !important; }
+.brow-bar { grid-column: 1 / -1; height: 5px; border-radius: 99px; background: var(--line); overflow: hidden; margin-top: 6px; }
+.brow-bar i { display: block; height: 100%; border-radius: 99px; background: var(--accent); }
+.brow.zero .brow-bar i { background: var(--muted); }
+.brow.neg { border-color: var(--bad) !important; }
+.brow.neg .brow-ic { background: var(--bad-bg); color: var(--bad); }
+.brow.neg .brow-bar i { background: var(--bad); }
+.brow-alert { grid-column: 1 / -1 !important; }
+.home-sec { background: transparent !important; border: 0 !important; box-shadow: none !important; padding: 4px 2px !important; }
+.home-sec .btn.act-btn { background: var(--surface); box-shadow: 0 2px 8px rgba(10, 40, 36, .07); }
+.home-sec .next { box-shadow: 0 2px 8px rgba(10, 40, 36, .07); }
+.home-sec details.spent { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 12px; }
+@media (max-width: 520px) { .brow { padding: 8px 10px 8px 8px !important; } .brow-ic { width: 34px; height: 34px; } }
+/* Inici: fit on one phone screen */
+.next-k { display: flex; justify-content: space-between; gap: 8px; }
+.next-k .next-in { text-transform: none; letter-spacing: 0; font-size: 0.78rem; }
+@media (max-width: 520px) {
+  body[data-tab="inici"] .home-sec { gap: 8px !important; }
+  .brow { padding: 7px 10px 7px 8px !important; }
+  .brow-ic { width: 32px; height: 32px; border-radius: 10px; }
+  .brow-ic .ic { width: 19px; height: 19px; }
+  .brow { grid-template-columns: 34px minmax(0, 1fr) auto !important; column-gap: 10px !important; }
+  .brow-years { font-size: 0.76rem; gap: 2px 8px; }
+  .brow-bar { height: 4px; margin-top: 4px; }
+  .brow-val b { font-size: 1.3rem; }
+  .bal-list { gap: 6px; }
+  .home-sec .next { padding: 8px 10px; }
+  .home-sec .next .dbox { width: 44px; }
+  .home-sec .btn.act-btn { padding: 9px 6px; }
+}
 </style>
 </head>
 <body>
@@ -864,6 +901,13 @@ main.slide-r { animation: slideR .22s ease-out; }
   const START = {"version": 2, "disp": {}, "dies": []};
   const $ = (id) => document.getElementById(id);
   const ICONS = { plus: '<path d="M12 5v14M5 12h14"/>', sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>', moon: '<path d="M20.5 13.5A8.5 8.5 0 1 1 10.5 3.5a6.5 6.5 0 0 0 10 10z"/>', auto: '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17z" fill="currentColor"/>', pencil: '<path d="M4 20h4L19 9l-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/>', mail: '<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3.5 7l8.5 6 8.5-6"/>'};
+  Object.assign(ICONS, {
+    b_vac: '<path d="M12 3.5a8.5 8.5 0 0 1 8.5 8.5h-17A8.5 8.5 0 0 1 12 3.5z"/><path d="M12 12v8.5M8.5 20.5h7"/>',
+    b_ap: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+    b_cf: '<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4M9.5 14.5l2 2 3.5-3.5"/>',
+    b_form: '<path d="M2.5 9.5L12 5l9.5 4.5L12 14z"/><path d="M6.5 11.5v4.5c3 2.2 8 2.2 11 0v-4.5M21.5 9.5v5"/>',
+    b_hex: '<path d="M13 2.5L5 13.5h6l-1 8 8-11h-6z"/>'
+  });
   function icon(name) {
     const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     s.setAttribute("class", "ic"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("aria-hidden", "true");
@@ -1131,6 +1175,8 @@ main.slide-r { animation: slideR .22s ease-out; }
       const parts = ys.filter((y) => dispOf(y, b.k) != null).map((y) => ({ y, had: dispOf(y, b.k), left: dispOf(y, b.k) - spentBy[y][b.k] }));
       const left = parts.reduce((a, x) => a + x.left, 0);
       const row = el("div", "brow");
+      const had = parts.reduce((a, x) => a + x.had, 0);
+      const ic = el("span", "brow-ic"); ic.append(icon("b_" + b.k));
       const name = el("div", "brow-name", b.name);
       const yrs = el("div", "brow-years num");
       parts.forEach((x) => {
@@ -1142,7 +1188,10 @@ main.slide-r { animation: slideR .22s ease-out; }
       });
       const val = el("div", "brow-val num");
       val.append(el("b", null, fmt(left)), el("small", null, unitWord(b, left)));
-      row.append(name, val, yrs);
+      const bar = el("div", "brow-bar"); const fill = el("i");
+      fill.style.width = (left < 0 ? 100 : had > 0 ? Math.max(0, Math.min(100, (left / had) * 100)) : 0) + "%";
+      bar.append(fill);
+      row.append(ic, name, val, yrs, bar);
       if (left < -1e-9) { row.classList.add("neg"); row.append(el("div", "brow-alert", `⚠ T'has passat ${fmt(-left)} ${unitWord(b, -left)}`)); }
       else if (Math.abs(left) < 1e-9) row.classList.add("zero");
       return row;
@@ -1172,8 +1221,9 @@ main.slide-r { animation: slideR .22s ease-out; }
     const wd = d.toLocaleDateString("ca-ES", { weekday: "long" });
     const from = [];
     for (const y of yearsOf(next).slice().sort()) for (const b of BAGS) { const v = amountOf(next, y, b.k); if (v > 0) from.push(`${shortName[b.k]} ${y}`); }
-    txt.append(el("span", "next-k", "El teu pròxim dia"), el("b", null, `${wd.charAt(0).toUpperCase() + wd.slice(1)} · ${durLabel(next)}`), el("span", "next-s", from.join(" + ") || "Sense saldo triat"));
-    box.replaceChildren(dateBox, txt, el("span", "next-in", when));
+    const kick = el("span", "next-k"); kick.append(document.createTextNode("El teu pròxim dia"), el("span", "next-in", when));
+    txt.append(kick, el("b", null, `${wd.charAt(0).toUpperCase() + wd.slice(1)} · ${durLabel(next)}`), el("span", "next-s", from.join(" + ") || "Sense saldo triat"));
+    box.replaceChildren(dateBox, txt);
     box.onclick = () => {
       showTab("dies");
       const li = $("entry_" + next.id);
@@ -1904,7 +1954,7 @@ main.slide-r { animation: slideR .22s ease-out; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122121607";
+    const BUILD = "20261122122115";
     const checkVersion = () => fetch("version.json?t=" + Date.now(), { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : null))
       .then((v) => { if (v && v.build && v.build !== BUILD) $("updateBar").hidden = false; })
@@ -2144,7 +2194,7 @@ main.slide-r { animation: slideR .22s ease-out; }
   sheetBg.append(sheet);
   document.body.append(sheetBg);
   {
-    const sec = $("h1s").closest("section");
+    const sec = $("h1s").closest("section"); sec.classList.add("home-sec");
     const greet = el("div", "greet"); greet.id = "greet";
     const nextDay = el("button", "next"); nextDay.type = "button"; nextDay.id = "nextDay"; nextDay.hidden = true;
     sec.querySelector(".step-head").after(greet, nextDay);
