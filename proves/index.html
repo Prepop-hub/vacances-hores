@@ -672,8 +672,8 @@ main.slide-r { animation: slideR .22s ease-out; }
 .brow:not(.open) .brow-ic { grid-row: 1 !important; }
 .brow { align-items: center; row-gap: 6px !important; }
 .brow-name { display: flex; align-items: center; gap: 6px; }
-.brow-name::after { content: ""; width: 7px; height: 7px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg) translateY(-2px); transition: transform .15s; flex: none; }
-.brow.open .brow-name::after { transform: rotate(-135deg) translateY(-1px); }
+.brow-val::after { content: ""; display: inline-block; width: 7px; height: 7px; margin-left: 10px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg) translateY(-3px); transition: transform .15s; }
+.brow.open .brow-val::after { transform: rotate(-135deg) translateY(-1px); }
 .brow-val { white-space: nowrap; }
 .brow-val b { display: inline !important; }
 .brow-val small { margin-left: 4px; }
@@ -2015,7 +2015,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122213817";
+    const BUILD = "20261122213916";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
