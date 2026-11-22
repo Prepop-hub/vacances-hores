@@ -703,7 +703,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
 .ring-mid small { font-size: 0.7rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
 .rtile.neg .ring-mid b { color: var(--bad); }
 .rtile.zero .ring-mid b { color: var(--muted); }
-.rtile-name { display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 800; font-size: 0.92rem; min-width: 0; }
+.rtile-name { display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: 800; font-size: 0.92rem; min-width: 0; text-align: center; line-height: 1.2; }
 .rtile-ic { display: grid; place-items: center; color: var(--accent); }
 .rtile-ic .ic { width: 17px; height: 17px; }
 .rtile-leg { display: grid; gap: 1px; font-size: 0.74rem; color: var(--muted); }
@@ -1269,7 +1269,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
       mid.append(el("b", null, fmt(left)), el("small", null, unitWord(b, left)));
       wrap.append(svg, mid);
       const ic = el("span", "rtile-ic"); ic.append(icon("b_" + b.k));
-      const name = el("div", "rtile-name"); name.append(ic, document.createTextNode(shortName[b.k] === "AP" ? "Hores personals" : shortName[b.k] === "CF" ? "Festius (CF)" : b.name));
+      const name = el("div", "rtile-name"); name.append(ic, el("span", null, MOTIU[b.k] || b.name));
       name.title = b.name;
       const leg = el("div", "rtile-leg num");
       parts.forEach((x) => {
@@ -2072,7 +2072,7 @@ body[data-tab="inici"] main { padding-bottom: 96px; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122214607";
+    const BUILD = "20261122214818";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
