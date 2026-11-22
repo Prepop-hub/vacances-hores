@@ -2192,7 +2192,7 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
     navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister())).catch(() => {});
     if (window.caches) caches.keys().then((ks) => ks.forEach((k) => caches.delete(k))).catch(() => {});
     // Is there a newer published version than the one on screen?
-    const BUILD = "20261122220816";
+    const BUILD = "20261122220906";
     // Load the page again skipping every saved copy: a new address can't come from the phone's cache.
     const hardUpdate = async () => {
       try { await fetch(location.pathname, { cache: "reload" }); } catch (e) { /* go on */ }
@@ -2262,7 +2262,8 @@ body.stretch .rtile-leg { font-size: 0.8rem; }
       // Room left: the tiles grow to fill the screen down to the tab bar.
       const tb = document.querySelector(".tabbar");
       if (!grid || grid.hidden || !tb || !grid.children.length) return;
-      const spare = tb.getBoundingClientRect().top - 12 - grid.getBoundingClientRect().bottom;
+      // Room before the tab bar, and before the page would start to scroll.
+      const spare = Math.min(tb.getBoundingClientRect().top - 12 - grid.getBoundingClientRect().bottom, window.innerHeight - document.documentElement.offsetHeight - 1);
       if (spare < 8) return;
       const rows = Math.ceil(grid.children.length / 2);
       const ring = Math.round(Math.min(150, 92 + (spare / rows) * 0.55));
